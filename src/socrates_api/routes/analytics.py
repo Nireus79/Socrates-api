@@ -1,6 +1,6 @@
 """Analytics API endpoints."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from typing import Any, Dict
 
 router = APIRouter()
