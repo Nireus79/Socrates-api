@@ -15,6 +15,8 @@ __version__ = "0.1.0"
 __author__ = "Socrates Team"
 __email__ = "info@socrates-ai.dev"
 
+from typing import Any, Dict
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -58,7 +60,7 @@ def create_app() -> FastAPI:
     app.include_router(workflows.router, prefix="/api/workflows", tags=["workflows"])
 
     @app.get("/health")
-    async def health_check():
+    async def health_check() -> Dict[str, Any]:
         """Health check endpoint."""
         return {"status": "healthy", "version": __version__}
 

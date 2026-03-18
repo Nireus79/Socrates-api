@@ -9,7 +9,7 @@ import uvicorn
 from socrates_api import create_app
 
 
-def main(argv: Optional[list] = None) -> int:
+def main(argv: Optional[list[str]] = None) -> int:
     """Run Socrates API server."""
     parser = argparse.ArgumentParser(description="Socrates API Server")
     parser.add_argument(
