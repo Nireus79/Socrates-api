@@ -1,16 +1,6 @@
-# Socrates API
+# socrates-api
 
-REST API for Socrates AI framework built with FastAPI.
-
-## Features
-
-- **FastAPI Framework** - Modern, fast, and production-ready
-- **Comprehensive REST Endpoints** for all Socrates commands
-- **OpenAPI/Swagger Documentation** at `/api/docs`
-- **Pydantic Validation** for request/response data
-- **CORS Support** for web frontend integration
-- **Async/Await Support** for high performance
-- **Health Check Endpoint** at `/health`
+REST API server for the Socrates AI platform. Provides a complete API for programmatic access to Socrates functionality.
 
 ## Installation
 
@@ -20,209 +10,398 @@ pip install socrates-api
 
 ## Quick Start
 
-### Running the Server
+### 1. Set Environment Variables
 
 ```bash
-# Using uvicorn directly
-uvicorn socrates_api:app --host 0.0.0.0 --port 8000
+export ANTHROPIC_API_KEY="your-api-key-here"
+export SOCRATES_DATA_DIR="~/.socrates"  # Optional
+export SOCRATES_API_HOST="0.0.0.0"      # Optional, default: 127.0.0.1
+export SOCRATES_API_PORT="8000"         # Optional, default: 8000
+```
 
-# Or using Python
-python -m socrates_api
+### 2. Run the Server
+
+```bash
+socrates-api
+```
+
+Or use Python directly:
+
+```bash
+python -m socrates_api.main
+```
+
+### 3. Access the API
+
+- **Swagger Documentation**: http://localhost:8000/docs
+- **ReDoc Documentation**: http://localhost:8000/redoc
+- **Health Check**: http://localhost:8000/health
+
+## API Endpoints
+
+### System Management
+
+- `GET /health` - Health check
+- `POST /initialize` - Initialize API with configuration
+- `GET /info` - Get system information
+
+### Projects
+
+- `POST /projects` - Create a new project
+- `GET /projects` - List projects (optionally filtered by owner)
+
+### Socratic Questions
+
+- `POST /projects/{project_id}/question` - Get a Socratic question
+- `POST /projects/{project_id}/response` - Process user response
+
+### Code Generation
+
+- `POST /code/generate` - Generate code for a project
+
+## Usage Examples
+
+### Initialize the API
+
+```bash
+curl -X POST http://localhost:8000/initialize \
+  -H "Content-Type: application/json" \
+  -d '{"api_key": "sk-ant-..."}'
+```
+
+### Create a Project
+
+```bash
+curl -X POST http://localhost:8000/projects \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Python API Development",
+    "owner": "alice",
+    "description": "Building REST APIs with FastAPI"
+  }'
+```
+
+### List Projects
+
+```bash
+curl http://localhost:8000/projects
+```
+
+### Ask a Socratic Question
+
+```bash
+curl -X POST http://localhost:8000/projects/proj_abc123/question \
+  -H "Content-Type: application/json" \
+  -d '{
+    "topic": "REST API design",
+    "difficulty_level": "intermediate"
+  }'
+```
+
+### Process a Response
+
+```bash
+curl -X POST http://localhost:8000/projects/proj_abc123/response \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question_id": "q_xyz789",
+    "user_response": "REST APIs should follow resource-oriented design principles...",
+    "project_id": "proj_abc123"
+  }'
+```
+
+### Generate Code
+
+```bash
+curl -X POST http://localhost:8000/code/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "project_id": "proj_abc123",
+    "specification": "Create a FastAPI endpoint for user registration",
+    "language": "python"
+  }'
+```
+
+## Python Client Example
+
+```python
+import requests
+import json
+
+BASE_URL = "http://localhost:8000"
+
+# Initialize
+resp = requests.post(f"{BASE_URL}/initialize", json={
+    "api_key": "sk-ant-..."
+})
+print(resp.json())
+
+# Create project
+resp = requests.post(f"{BASE_URL}/projects", json={
+    "name": "My Project",
+    "owner": "alice",
+    "description": "Learning FastAPI"
+})
+project = resp.json()
+project_id = project["project_id"]
+
+# Get a question
+resp = requests.post(f"{BASE_URL}/projects/{project_id}/question", json={
+    "topic": "FastAPI basics",
+    "difficulty_level": "beginner"
+})
+question = resp.json()
+print(f"Question: {question['question']}")
+
+# Process response
+resp = requests.post(f"{BASE_URL}/projects/{project_id}/response", json={
+    "question_id": question["question_id"],
+    "user_response": "FastAPI is a modern Python web framework...",
+    "project_id": project_id
+})
+feedback = resp.json()
+print(f"Feedback: {feedback['feedback']}")
+```
+
+## Async Integration Example
+
+The API is built with FastAPI and uses asyncio internally. For high-throughput scenarios:
+
+```python
+import asyncio
+import httpx
+
+async def main():
+    async with httpx.AsyncClient() as client:
+        # Initialize
+        resp = await client.post("http://localhost:8000/initialize", json={
+            "api_key": "sk-ant-..."
+        })
+        print(resp.json())
+
+        # Create multiple projects concurrently
+        tasks = [
+            client.post("http://localhost:8000/projects", json={
+                "name": f"Project {i}",
+                "owner": "alice"
+            })
+            for i in range(5)
+        ]
+
+        results = await asyncio.gather(*tasks)
+        for r in results:
+            print(r.json())
+
+asyncio.run(main())
+```
+
+## Event Integration
+
+The API automatically registers event listeners with the Socrates library. Events are logged and can be monitored via the logging system:
+
+```python
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("socrates_api.main")
+
+# API will log events like:
+# [Event] PROJECT_CREATED: {'project_id': 'proj_abc123', ...}
+# [Event] CODE_GENERATED: {'lines': 150, ...}
+# [Event] AGENT_ERROR: {'agent_name': 'code_generator', ...}
+```
+
+## Configuration
+
+The API respects these environment variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ANTHROPIC_API_KEY` | None | Claude API key (required) |
+| `SOCRATES_DATA_DIR` | `~/.socrates` | Directory for storing data |
+| `SOCRATES_API_HOST` | `127.0.0.1` | Server host |
+| `SOCRATES_API_PORT` | `8000` | Server port |
+| `SOCRATES_API_RELOAD` | `false` | Enable auto-reload in development |
+
+## Error Handling
+
+The API returns structured error responses:
+
+```json
+{
+  "error": "ProjectNotFoundError",
+  "message": "Project 'proj_abc123' not found",
+  "error_code": "PROJECT_NOT_FOUND",
+  "details": {"project_id": "proj_abc123"}
+}
+```
+
+All Socrates library errors are caught and returned with appropriate HTTP status codes.
+
+## Deployment
+
+### Using Gunicorn (Production)
+
+```bash
+pip install gunicorn
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker socrates_api.main:app
 ```
 
 ### Using Docker
 
-```bash
-docker build -t socrates-api .
-docker run -p 8000:8000 socrates-api
-```
-
-### API Endpoints
-
-#### Analytics
-- `GET /api/analytics/summary` - Get analytics summary
-- `GET /api/analytics/analyze` - Analyze categories
-- `GET /api/analytics/trends` - Get trends
-- `GET /api/analytics/breakdown` - Get detailed breakdown
-
-#### Projects
-- `GET /api/projects` - List projects
-- `POST /api/projects` - Create project
-- `GET /api/projects/{id}` - Get project details
-- `PUT /api/projects/{id}` - Update project
-- `DELETE /api/projects/{id}` - Delete project
-
-#### Code
-- `POST /api/code/generate` - Generate code
-- `POST /api/code/explain` - Explain code
-- `POST /api/code/review` - Review code
-- `POST /api/code/docs` - Generate documentation
-
-#### Sessions
-- `GET /api/sessions` - List sessions
-- `POST /api/sessions` - Create session
-- `GET /api/sessions/{id}` - Get session
-- `POST /api/sessions/{id}/save` - Save session
-- `POST /api/sessions/{id}/load` - Load session
-
-#### Documents
-- `GET /api/documents` - List documents
-- `POST /api/documents/import` - Import document
-- `POST /api/documents/import-dir` - Import directory
-- `GET /api/documents/{id}` - Get document
-- `DELETE /api/documents/{id}` - Delete document
-
-#### Collaboration
-- `POST /api/collaboration/add` - Add collaborator
-- `GET /api/collaboration/list` - List collaborators
-- `PUT /api/collaboration/{id}/role` - Set role
-- `DELETE /api/collaboration/{id}` - Remove collaborator
-
-#### Workflows
-- `GET /api/workflows` - List workflows
-- `POST /api/workflows` - Create workflow
-- `GET /api/workflows/{id}` - Get workflow
-- `PUT /api/workflows/{id}` - Update workflow
-- `DELETE /api/workflows/{id}` - Delete workflow
-
-#### Health
-- `GET /health` - Health check
-
-## Configuration
-
-### Environment Variables
-
-```bash
-# Server
-API_HOST=0.0.0.0
-API_PORT=8000
-API_RELOAD=true
-
-# CORS
-CORS_ORIGINS=["*"]
-
-# Logging
-LOG_LEVEL=INFO
-```
-
-## Development
-
-```bash
-# Install dev dependencies
-pip install -e ".[dev]"
-
-# Run tests
-pytest tests/ -v
-
-# Format code
-black src/ tests/
-
-# Check types
-mypy src/socrates_api --strict
-
-# Lint
-ruff check src/ tests/
-```
-
-## Architecture
-
-### Main Application
-
-```python
-from socrates_api import create_app
-
-app = create_app()
-```
-
-### Adding Custom Routes
-
-```python
-from fastapi import APIRouter
-
-router = APIRouter()
-
-@router.get("/custom")
-async def custom_endpoint():
-    return {"message": "Custom endpoint"}
-
-app.include_router(router, prefix="/api/custom")
-```
-
-## Dependencies
-
-- **fastapi** >= 0.104.0 - Web framework
-- **uvicorn** >= 0.24.0 - ASGI server
-- **pydantic** >= 2.0.0 - Data validation
-- **socrates-cli** >= 0.1.0 - CLI commands
-- **socratic-learning** >= 0.1.0 - Learning system
-- **socratic-analyzer** >= 0.1.0 - Code analysis
-- **socratic-workflow** >= 0.1.0 - Workflow orchestration
-- **socratic-conflict** >= 0.1.0 - Conflict detection
-- **socratic-agents** >= 0.1.0 - Multi-agent orchestration
-
-## Docker Support
-
-### Dockerfile
-
 ```dockerfile
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY pyproject.toml .
-RUN pip install --no-cache-dir .
+RUN pip install socrates-api
 
-EXPOSE 8000
+ENV SOCRATES_API_HOST=0.0.0.0
 
-CMD ["uvicorn", "socrates_api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["socrates-api"]
 ```
 
-### Docker Compose
+```bash
+docker build -t socrates-api .
+docker run -e ANTHROPIC_API_KEY="sk-ant-..." -p 8000:8000 socrates-api
+```
+
+### Using Docker Compose
 
 ```yaml
 version: '3.8'
 
 services:
-  api:
+  socrates-api:
     build: .
     ports:
       - "8000:8000"
     environment:
-      - API_HOST=0.0.0.0
-      - API_PORT=8000
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      SOCRATES_DATA_DIR: /data
+    volumes:
+      - socrates_data:/data
+
+volumes:
+  socrates_data:
 ```
 
-## Testing
+## Development
+
+### Setup
 
 ```bash
-# Run all tests
-pytest tests/ -v
-
-# Run with coverage
-pytest tests/ --cov=src/socrates_api
-
-# Run specific test
-pytest tests/test_api.py::test_health_check -v
+git clone https://github.com/Nireus79/Socrates
+cd socrates-api
+pip install -e ".[dev]"
 ```
 
-## Contributing
+### Run Tests
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
+```bash
+pytest tests/ -v --cov=socrates_api
+```
 
-## License
+### Run in Development Mode
 
-MIT - See LICENSE file
+```bash
+export SOCRATES_API_RELOAD=true
+socrates-api
+```
+
+## API Response Examples
+
+### Successful Project Creation
+
+```json
+{
+  "project_id": "proj_abc123",
+  "name": "Python API Development",
+  "owner": "alice",
+  "description": "Building REST APIs with FastAPI",
+  "phase": "active",
+  "created_at": "2025-12-04T10:00:00Z",
+  "updated_at": "2025-12-04T10:30:00Z",
+  "is_archived": false
+}
+```
+
+### Successful Question Generation
+
+```json
+{
+  "question_id": "q_xyz789",
+  "question": "What are the main principles of RESTful API design?",
+  "context": "You are designing an API for a tutoring system",
+  "hints": [
+    "Think about resource-oriented design",
+    "Consider HTTP methods and status codes"
+  ]
+}
+```
+
+### Successful Code Generation
+
+```json
+{
+  "code": "@app.post('/api/users/register')\nasync def register_user(user: User):\n    # Implementation here",
+  "explanation": "This endpoint handles user registration using FastAPI...",
+  "language": "python",
+  "token_usage": {
+    "input_tokens": 150,
+    "output_tokens": 200,
+    "total_tokens": 350
+  }
+}
+```
+
+## Architecture
+
+The API is built on three layers:
+
+1. **FastAPI Application** (`main.py`) - HTTP request handling, routing, and middleware
+2. **Pydantic Models** (`models.py`) - Request/response validation and serialization
+3. **Socrates Library** - Business logic via `socrates` package
+
+Event flow:
+```
+HTTP Request → FastAPI Route → Socrates Library → Event Emission → HTTP Response
+                                      ↓
+                              Event Listeners (Logging)
+```
+
+## Monitoring
+
+The API emits events for all significant operations. Monitor them via logging:
+
+```python
+import logging
+logging.basicConfig(level=logging.INFO)
+
+# All events will be logged like:
+# [Event] PROJECT_CREATED: {...}
+# [Event] AGENT_COMPLETE: {...}
+# [Event] TOKEN_USAGE: {...}
+```
+
+Or set up custom event listeners by extending the API:
+
+```python
+def setup_monitoring(orchestrator):
+    def on_token_usage(event_type, data):
+        # Send to monitoring system
+        send_metrics(data)
+
+    orchestrator.event_emitter.on(socrates.EventType.TOKEN_USAGE, on_token_usage)
+```
 
 ## Support
 
-- [GitHub Issues](https://github.com/Nireus79/Socrates-api/issues)
-- [Documentation](https://github.com/Nireus79/Socrates-api)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+For issues, feature requests, or contributions, visit:
+- GitHub: https://github.com/Nireus79/Socrates
+- Issues: https://github.com/Nireus79/Socrates/issues
+- Documentation: https://socrates-ai.readthedocs.io
 
----
+## License
 
-Part of the Socrates AI Framework ecosystem.
+MIT

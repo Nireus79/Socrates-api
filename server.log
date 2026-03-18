@@ -1,0 +1,581 @@
+INFO:     Will watch for changes in these directories: ['C:\\Users\\themi\\PycharmProjects\\Socrates\\socrates-api']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [1260] using WatchFiles
+reportlab not available - PDF reports will use fallback format
+pandas not available - CSV reports will use standard csv module
+2026-01-11 17:43:58,772 - socrates_api.middleware.rate_limit - WARNING - Failed to connect to Redis (redis://redis:6379), falling back to in-memory rate limiting: Error 11001 connecting to redis:6379. getaddrinfo failed.
+2026-01-11 17:43:58,774 - socrates_api.middleware.rate_limit - INFO - Rate limiter initialized with in-memory backend
+2026-01-11 17:43:58,775 - socrates_api.middleware.security_headers - INFO - Security headers middleware added (environment: development)
+2026-01-11 17:43:58,777 - socrates_api.middleware.metrics - INFO - Metrics middleware added
+2026-01-11 17:43:58,777 - socrates_api.main - INFO - CORS configured for development environment with origins: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:8080', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174', 'http://127.0.0.1:5175', 'http://127.0.0.1:8080', 'http://localhost:8000', 'http://127.0.0.1:8000']
+INFO:     Started server process [11800]
+INFO:     Waiting for application startup.
+2026-01-11 17:43:59,131 - socrates_api.main - INFO - Starting Socrates API server...
+2026-01-11 17:43:59,131 - socrates_api.main - INFO - Rate limiter is active
+2026-01-11 17:43:59,131 - socrates_api.main - INFO - ANTHROPIC_API_KEY is set (sk-ant-api...)
+2026-01-11 17:43:59,131 - socrates_api.main - INFO - Creating AgentOrchestrator...
+[32m[INFO][0m orchestrator: Initializing database components...
+2026-01-11 17:43:59,135 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Foreign keys enabled for this connection
+2026-01-11 17:43:59,136 - socratic_system.database.project_db.ProjectDatabase - INFO - V2 schema already exists (foreign keys enabled)
+2026-01-11 17:43:59,141 - socrates.database.migrations - INFO - All required migrations already applied
+2026-01-11 17:43:59,141 - socratic_system.database.project_db.ProjectDatabase - INFO - Migrations check passed: All required migrations already applied
+2026-01-11 17:43:59,141 - socrates_api.database - INFO - Database singleton initialized at C:\Users\themi\.socrates\projects.db
+2026-01-11 17:43:59,141 - socrates.database.vector - INFO - Initializing vector database: C:\Users\themi\.socrates\vector_db
+2026-01-11 17:43:59,344 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-01-11 17:43:59,451 - chromadb.config - DEBUG - Starting component System
+2026-01-11 17:43:59,451 - chromadb.config - DEBUG - Starting component Posthog
+2026-01-11 17:43:59,498 - socrates.database.vector - DEBUG - ChromaDB client created
+2026-01-11 17:43:59,519 - socrates.database.vector - DEBUG - Vector collection 'socratic_knowledge' initialized
+2026-01-11 17:43:59,519 - socrates.database.vector - INFO - Vector database initialized successfully (embedding model will load on first use)
+2026-01-11 17:43:59,519 - socrates.database.vector - INFO - Embedding and search caches initialized (Phase 3)
+[32m[INFO][0m orchestrator: Database components initialized successfully
+2026-01-11 17:43:59,748 - socrates.events - DEBUG - Event: system.initialized - {'version': '0.5.0', 'data_dir': 'C:\\Users\\themi\\.socrates', 'model': 'claude-haiku-4-5-20251001', 'timestamp': '2026-01-11T17:43:59.748608'}
+[32m[INFO][0m orchestrator: Loading knowledge base...
+2026-01-11 17:43:59,748 - socrates.events - DEBUG - Event: log.info - {'message': 'Loading knowledge base...', 'timestamp': '2026-01-11T17:43:59.748608'}
+[32m[INFO][0m orchestrator: ======================================================================
+[36m[DEBUG][0m orchestrator: Attempting to load knowledge base from default location: C:\Users\themi\PycharmProjects\Socrates\socratic_system\config\knowledge_base.json
+[32m[INFO][0m orchestrator: Socrates AI initialized successfully!
+[32m[INFO][0m orchestrator:   Configuration: SocratesConfig(model=claude-haiku-4-5-20251001, data_dir=C:\Users\themi\.socrates, log_level=INFO)
+[36m[DEBUG][0m orchestrator: Knowledge base file found at: C:\Users\themi\PycharmProjects\Socrates\socratic_system\config\knowledge_base.json
+[32m[INFO][0m orchestrator:   Projects DB: C:\Users\themi\.socrates\projects.db
+[32m[INFO][0m orchestrator:   Vector DB: C:\Users\themi\.socrates\vector_db
+[32m[INFO][0m orchestrator: ======================================================================
+2026-01-11 17:43:59,749 - socrates_api.main - INFO - AgentOrchestrator created successfully
+2026-01-11 17:43:59,749 - socrates_api.main - INFO - Testing API connection...
+2026-01-11 17:43:59,943 - anthropic._base_client - DEBUG - Request options: {'method': 'post', 'url': '/v1/messages', 'timeout': Timeout(connect=5.0, read=600, write=600, pool=600), 'files': None, 'idempotency_key': 'stainless-python-retry-760233bc-3904-4a3a-ab65-113577a75542', 'json_data': {'max_tokens': 10, 'messages': [{'role': 'user', 'content': 'Test'}], 'model': 'claude-haiku-4-5-20251001', 'temperature': 0}}
+[32m[INFO][0m orchestrator: Successfully loaded 100 knowledge entries from default location
+[32m[INFO][0m orchestrator: Found 100 knowledge entries to load
+2026-01-11 17:43:59,967 - anthropic._base_client - DEBUG - Sending HTTP Request: POST https://api.anthropic.com/v1/messages
+2026-01-11 17:43:59,967 - httpcore.connection - DEBUG - connect_tcp.started host='api.anthropic.com' port=443 local_address=None timeout=5.0 socket_options=[(65535, 8, True), (6, 17, 60), (6, 16, 5), (6, 3, 60)]
+2026-01-11 17:43:59,986 - socrates.database.vector - DEBUG - Knowledge entry 'python_decorators' already exists, skipping...
+2026-01-11 17:43:59,986 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: python_decorators
+2026-01-11 17:43:59,992 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000020801366000>
+2026-01-11 17:43:59,992 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000020801452550> server_hostname='api.anthropic.com' timeout=5.0
+2026-01-11 17:43:59,998 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): us.i.posthog.com:443
+2026-01-11 17:44:00,031 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: python_decorators
+2026-01-11 17:44:00,033 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,039 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000020801365CA0>
+2026-01-11 17:44:00,039 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2026-01-11 17:44:00,039 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-01-11 17:44:00,039 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2026-01-11 17:44:00,039 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-01-11 17:44:00,039 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2026-01-11 17:44:00,044 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document python_decorators for project default
+2026-01-11 17:44:00,045 - socrates.database.vector - DEBUG - Knowledge entry 'python_generators' already exists, skipping...
+2026-01-11 17:44:00,046 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: python_generators
+2026-01-11 17:44:00,075 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: python_generators
+2026-01-11 17:44:00,077 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,089 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document python_generators for project default
+2026-01-11 17:44:00,091 - socrates.database.vector - DEBUG - Knowledge entry 'python_async_await' already exists, skipping...
+2026-01-11 17:44:00,091 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: python_async_await
+2026-01-11 17:44:00,120 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: python_async_await
+2026-01-11 17:44:00,122 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,133 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document python_async_await for project default
+2026-01-11 17:44:00,135 - socrates.database.vector - DEBUG - Knowledge entry 'python_type_hints' already exists, skipping...
+2026-01-11 17:44:00,135 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: python_type_hints
+2026-01-11 17:44:00,184 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: python_type_hints
+2026-01-11 17:44:00,187 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,198 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document python_type_hints for project default
+2026-01-11 17:44:00,199 - socrates.database.vector - DEBUG - Knowledge entry 'python_context_managers' already exists, skipping...
+2026-01-11 17:44:00,199 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: python_context_managers
+2026-01-11 17:44:00,230 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: python_context_managers
+2026-01-11 17:44:00,233 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,246 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document python_context_managers for project default
+2026-01-11 17:44:00,247 - socrates.database.vector - DEBUG - Knowledge entry 'javascript_promises' already exists, skipping...
+2026-01-11 17:44:00,247 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: javascript_promises
+2026-01-11 17:44:00,279 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: javascript_promises
+2026-01-11 17:44:00,282 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,294 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document javascript_promises for project default
+2026-01-11 17:44:00,296 - socrates.database.vector - DEBUG - Knowledge entry 'javascript_closures' already exists, skipping...
+2026-01-11 17:44:00,296 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: javascript_closures
+2026-01-11 17:44:00,328 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: javascript_closures
+2026-01-11 17:44:00,331 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,342 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document javascript_closures for project default
+2026-01-11 17:44:00,344 - socrates.database.vector - DEBUG - Knowledge entry 'javascript_es6_features' already exists, skipping...
+2026-01-11 17:44:00,344 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: javascript_es6_features
+2026-01-11 17:44:00,375 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: javascript_es6_features
+2026-01-11 17:44:00,378 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,389 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document javascript_es6_features for project default
+2026-01-11 17:44:00,391 - socrates.database.vector - DEBUG - Knowledge entry 'typescript_basics' already exists, skipping...
+2026-01-11 17:44:00,391 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: typescript_basics
+2026-01-11 17:44:00,423 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: typescript_basics
+2026-01-11 17:44:00,425 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,438 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document typescript_basics for project default
+2026-01-11 17:44:00,440 - socrates.database.vector - DEBUG - Knowledge entry 'react_hooks' already exists, skipping...
+2026-01-11 17:44:00,440 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: react_hooks
+2026-01-11 17:44:00,473 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: react_hooks
+2026-01-11 17:44:00,476 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,488 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document react_hooks for project default
+2026-01-11 17:44:00,489 - socrates.database.vector - DEBUG - Knowledge entry 'sorting_algorithms' already exists, skipping...
+2026-01-11 17:44:00,489 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: sorting_algorithms
+2026-01-11 17:44:00,518 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: sorting_algorithms
+2026-01-11 17:44:00,521 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,532 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document sorting_algorithms for project default
+2026-01-11 17:44:00,533 - socrates.database.vector - DEBUG - Knowledge entry 'search_algorithms' already exists, skipping...
+2026-01-11 17:44:00,534 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: search_algorithms
+2026-01-11 17:44:00,565 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: search_algorithms
+2026-01-11 17:44:00,568 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,579 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document search_algorithms for project default
+2026-01-11 17:44:00,580 - socrates.database.vector - DEBUG - Knowledge entry 'graph_algorithms' already exists, skipping...
+2026-01-11 17:44:00,581 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: graph_algorithms
+2026-01-11 17:44:00,611 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: graph_algorithms
+2026-01-11 17:44:00,614 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,627 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document graph_algorithms for project default
+2026-01-11 17:44:00,628 - socrates.database.vector - DEBUG - Knowledge entry 'dynamic_programming' already exists, skipping...
+2026-01-11 17:44:00,628 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: dynamic_programming
+2026-01-11 17:44:00,658 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: dynamic_programming
+2026-01-11 17:44:00,660 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,673 - urllib3.connectionpool - DEBUG - https://us.i.posthog.com:443 "POST /batch/ HTTP/1.1" 200 15
+2026-01-11 17:44:00,674 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document dynamic_programming for project default
+2026-01-11 17:44:00,676 - socrates.database.vector - DEBUG - Knowledge entry 'time_complexity_analysis' already exists, skipping...
+2026-01-11 17:44:00,676 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: time_complexity_analysis
+2026-01-11 17:44:00,707 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: time_complexity_analysis
+2026-01-11 17:44:00,709 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,721 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document time_complexity_analysis for project default
+2026-01-11 17:44:00,722 - socrates.database.vector - DEBUG - Knowledge entry 'rest_api_design' already exists, skipping...
+2026-01-11 17:44:00,722 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: rest_api_design
+2026-01-11 17:44:00,753 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: rest_api_design
+2026-01-11 17:44:00,756 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,766 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document rest_api_design for project default
+2026-01-11 17:44:00,768 - socrates.database.vector - DEBUG - Knowledge entry 'graphql_basics' already exists, skipping...
+2026-01-11 17:44:00,768 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: graphql_basics
+2026-01-11 17:44:00,795 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: graphql_basics
+2026-01-11 17:44:00,797 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,808 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document graphql_basics for project default
+2026-01-11 17:44:00,809 - socrates.database.vector - DEBUG - Knowledge entry 'authentication_jwt' already exists, skipping...
+2026-01-11 17:44:00,809 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: authentication_jwt
+2026-01-11 17:44:00,831 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: authentication_jwt
+2026-01-11 17:44:00,834 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,840 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document authentication_jwt for project default
+2026-01-11 17:44:00,841 - socrates.database.vector - DEBUG - Knowledge entry 'responsive_design' already exists, skipping...
+2026-01-11 17:44:00,842 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: responsive_design
+2026-01-11 17:44:00,862 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: responsive_design
+2026-01-11 17:44:00,865 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,870 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document responsive_design for project default
+2026-01-11 17:44:00,871 - socrates.database.vector - DEBUG - Knowledge entry 'web_security_basics' already exists, skipping...
+2026-01-11 17:44:00,871 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: web_security_basics
+2026-01-11 17:44:00,886 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: web_security_basics
+2026-01-11 17:44:00,889 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,894 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document web_security_basics for project default
+2026-01-11 17:44:00,896 - socrates.database.vector - DEBUG - Knowledge entry 'docker_fundamentals' already exists, skipping...
+2026-01-11 17:44:00,896 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: docker_fundamentals
+2026-01-11 17:44:00,912 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: docker_fundamentals
+2026-01-11 17:44:00,914 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,916 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Sun, 11 Jan 2026 15:44:01 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'anthropic-ratelimit-input-tokens-limit', b'1000000'), (b'anthropic-ratelimit-input-tokens-remaining', b'1000000'), (b'anthropic-ratelimit-input-tokens-reset', b'2026-01-11T15:44:01Z'), (b'anthropic-ratelimit-output-tokens-limit', b'200000'), (b'anthropic-ratelimit-output-tokens-remaining', b'200000'), (b'anthropic-ratelimit-output-tokens-reset', b'2026-01-11T15:44:01Z'), (b'anthropic-ratelimit-requests-limit', b'2000'), (b'anthropic-ratelimit-requests-remaining', b'1999'), (b'anthropic-ratelimit-requests-reset', b'2026-01-11T15:44:01Z'), (b'anthropic-ratelimit-tokens-limit', b'1200000'), (b'anthropic-ratelimit-tokens-remaining', b'1200000'), (b'anthropic-ratelimit-tokens-reset', b'2026-01-11T15:44:01Z'), (b'request-id', b'req_011CX1r8ZQR3pgmdaefWNaWr'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'anthropic-organization-id', b'5c89cbbf-6eb9-455f-b4dd-4dde627540a9'), (b'Server', b'cloudflare'), (b'x-envoy-upstream-service-time', b'700'), (b'cf-cache-status', b'DYNAMIC'), (b'X-Robots-Tag', b'none'), (b'Content-Encoding', b'gzip'), (b'CF-RAY', b'9bc588762c350c6a-ATH')])
+2026-01-11 17:44:00,916 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-01-11 17:44:00,917 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2026-01-11 17:44:00,917 - httpcore.http11 - DEBUG - receive_response_body.complete
+2026-01-11 17:44:00,917 - httpcore.http11 - DEBUG - response_closed.started
+2026-01-11 17:44:00,917 - httpcore.http11 - DEBUG - response_closed.complete
+2026-01-11 17:44:00,917 - anthropic._base_client - DEBUG - HTTP Response: POST https://api.anthropic.com/v1/messages "200 OK" Headers({'date': 'Sun, 11 Jan 2026 15:44:01 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'anthropic-ratelimit-input-tokens-limit': '1000000', 'anthropic-ratelimit-input-tokens-remaining': '1000000', 'anthropic-ratelimit-input-tokens-reset': '2026-01-11T15:44:01Z', 'anthropic-ratelimit-output-tokens-limit': '200000', 'anthropic-ratelimit-output-tokens-remaining': '200000', 'anthropic-ratelimit-output-tokens-reset': '2026-01-11T15:44:01Z', 'anthropic-ratelimit-requests-limit': '2000', 'anthropic-ratelimit-requests-remaining': '1999', 'anthropic-ratelimit-requests-reset': '2026-01-11T15:44:01Z', 'anthropic-ratelimit-tokens-limit': '1200000', 'anthropic-ratelimit-tokens-remaining': '1200000', 'anthropic-ratelimit-tokens-reset': '2026-01-11T15:44:01Z', 'request-id': 'req_011CX1r8ZQR3pgmdaefWNaWr', 'strict-transport-security': 'max-age=31536000; includeSubDomains; preload', 'anthropic-organization-id': '5c89cbbf-6eb9-455f-b4dd-4dde627540a9', 'server': 'cloudflare', 'x-envoy-upstream-service-time': '700', 'cf-cache-status': 'DYNAMIC', 'x-robots-tag': 'none', 'content-encoding': 'gzip', 'cf-ray': '9bc588762c350c6a-ATH'})
+2026-01-11 17:44:00,917 - anthropic._base_client - DEBUG - request_id: req_011CX1r8ZQR3pgmdaefWNaWr
+2026-01-11 17:44:00,932 - socrates.clients.claude - INFO - Claude API connection test successful
+2026-01-11 17:44:00,932 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document docker_fundamentals for project default
+2026-01-11 17:44:00,933 - socrates_api.main - INFO - Orchestrator initialized successfully with valid API key
+2026-01-11 17:44:00,933 - socrates_api.main - INFO - Setting up event listeners...
+2026-01-11 17:44:00,933 - socrates_api.main - INFO - Event listeners registered
+2026-01-11 17:44:00,933 - socrates_api.main - INFO - Event listeners set up
+2026-01-11 17:44:00,933 - socrates_api.main - INFO - Storing orchestrator in global state...
+2026-01-11 17:44:00,933 - socrates_api.main - INFO - Orchestrator stored. app_state['orchestrator'] = <socratic_system.orchestration.orchestrator.AgentOrchestrator object at 0x00000208012F52B0>
+2026-01-11 17:44:00,933 - socrates_api.main - INFO - Socrates API orchestrator fully initialized and ready
+INFO:     Application startup complete.
+2026-01-11 17:44:00,934 - socrates.database.vector - DEBUG - Knowledge entry 'ci_cd_pipelines' already exists, skipping...
+2026-01-11 17:44:00,934 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: ci_cd_pipelines
+2026-01-11 17:44:00,974 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: ci_cd_pipelines
+2026-01-11 17:44:00,977 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:00,989 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document ci_cd_pipelines for project default
+2026-01-11 17:44:00,990 - socrates.database.vector - DEBUG - Knowledge entry 'git_workflows' already exists, skipping...
+2026-01-11 17:44:00,990 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: git_workflows
+2026-01-11 17:44:01,017 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: git_workflows
+2026-01-11 17:44:01,020 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,032 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document git_workflows for project default
+2026-01-11 17:44:01,033 - socrates.database.vector - DEBUG - Knowledge entry 'kubernetes_basics' already exists, skipping...
+2026-01-11 17:44:01,034 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: kubernetes_basics
+2026-01-11 17:44:01,066 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: kubernetes_basics
+2026-01-11 17:44:01,069 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,082 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document kubernetes_basics for project default
+2026-01-11 17:44:01,084 - socrates.database.vector - DEBUG - Knowledge entry 'monitoring_observability' already exists, skipping...
+2026-01-11 17:44:01,084 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: monitoring_observability
+2026-01-11 17:44:01,115 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: monitoring_observability
+2026-01-11 17:44:01,118 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,130 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document monitoring_observability for project default
+2026-01-11 17:44:01,131 - socrates.database.vector - DEBUG - Knowledge entry 'unit_testing_basics' already exists, skipping...
+2026-01-11 17:44:01,131 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: unit_testing_basics
+2026-01-11 17:44:01,161 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: unit_testing_basics
+2026-01-11 17:44:01,164 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,176 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document unit_testing_basics for project default
+2026-01-11 17:44:01,177 - socrates.database.vector - DEBUG - Knowledge entry 'test_driven_development' already exists, skipping...
+2026-01-11 17:44:01,178 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: test_driven_development
+2026-01-11 17:44:01,207 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: test_driven_development
+2026-01-11 17:44:01,211 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,222 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document test_driven_development for project default
+2026-01-11 17:44:01,223 - socrates.database.vector - DEBUG - Knowledge entry 'mocking_testing' already exists, skipping...
+2026-01-11 17:44:01,224 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: mocking_testing
+2026-01-11 17:44:01,253 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: mocking_testing
+2026-01-11 17:44:01,256 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,269 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document mocking_testing for project default
+2026-01-11 17:44:01,270 - socrates.database.vector - DEBUG - Knowledge entry 'integration_testing' already exists, skipping...
+2026-01-11 17:44:01,271 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: integration_testing
+2026-01-11 17:44:01,302 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: integration_testing
+2026-01-11 17:44:01,305 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,317 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document integration_testing for project default
+2026-01-11 17:44:01,319 - socrates.database.vector - DEBUG - Knowledge entry 'end_to_end_testing' already exists, skipping...
+2026-01-11 17:44:01,319 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: end_to_end_testing
+2026-01-11 17:44:01,348 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: end_to_end_testing
+2026-01-11 17:44:01,351 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,362 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document end_to_end_testing for project default
+2026-01-11 17:44:01,363 - socrates.database.vector - DEBUG - Knowledge entry 'three_act_structure' already exists, skipping...
+2026-01-11 17:44:01,364 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: three_act_structure
+2026-01-11 17:44:01,396 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: three_act_structure
+2026-01-11 17:44:01,399 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,409 - urllib3.connectionpool - DEBUG - https://us.i.posthog.com:443 "POST /batch/ HTTP/1.1" 200 15
+2026-01-11 17:44:01,411 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document three_act_structure for project default
+2026-01-11 17:44:01,412 - socrates.database.vector - DEBUG - Knowledge entry 'character_development' already exists, skipping...
+2026-01-11 17:44:01,412 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: character_development
+2026-01-11 17:44:01,442 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: character_development
+2026-01-11 17:44:01,445 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,458 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document character_development for project default
+2026-01-11 17:44:01,460 - socrates.database.vector - DEBUG - Knowledge entry 'dialogue_writing' already exists, skipping...
+2026-01-11 17:44:01,460 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: dialogue_writing
+2026-01-11 17:44:01,491 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: dialogue_writing
+2026-01-11 17:44:01,494 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,505 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document dialogue_writing for project default
+2026-01-11 17:44:01,507 - socrates.database.vector - DEBUG - Knowledge entry 'pacing_tension' already exists, skipping...
+2026-01-11 17:44:01,507 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: pacing_tension
+2026-01-11 17:44:01,558 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: pacing_tension
+2026-01-11 17:44:01,562 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,574 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document pacing_tension for project default
+2026-01-11 17:44:01,576 - socrates.database.vector - DEBUG - Knowledge entry 'technical_writing' already exists, skipping...
+2026-01-11 17:44:01,576 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: technical_writing
+2026-01-11 17:44:01,609 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: technical_writing
+2026-01-11 17:44:01,612 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,624 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document technical_writing for project default
+2026-01-11 17:44:01,626 - socrates.database.vector - DEBUG - Knowledge entry 'clear_writing' already exists, skipping...
+2026-01-11 17:44:01,626 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: clear_writing
+2026-01-11 17:44:01,658 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: clear_writing
+2026-01-11 17:44:01,661 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,673 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document clear_writing for project default
+2026-01-11 17:44:01,675 - socrates.database.vector - DEBUG - Knowledge entry 'editing_revision' already exists, skipping...
+2026-01-11 17:44:01,675 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: editing_revision
+2026-01-11 17:44:01,708 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: editing_revision
+2026-01-11 17:44:01,711 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,723 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document editing_revision for project default
+2026-01-11 17:44:01,725 - socrates.database.vector - DEBUG - Knowledge entry 'feedback_integration' already exists, skipping...
+2026-01-11 17:44:01,725 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: feedback_integration
+2026-01-11 17:44:01,756 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: feedback_integration
+2026-01-11 17:44:01,759 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,771 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document feedback_integration for project default
+2026-01-11 17:44:01,773 - socrates.database.vector - DEBUG - Knowledge entry 'academic_writing' already exists, skipping...
+2026-01-11 17:44:01,773 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: academic_writing
+2026-01-11 17:44:01,805 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: academic_writing
+2026-01-11 17:44:01,808 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,819 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document academic_writing for project default
+2026-01-11 17:44:01,821 - socrates.database.vector - DEBUG - Knowledge entry 'fiction_writing' already exists, skipping...
+2026-01-11 17:44:01,821 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: fiction_writing
+2026-01-11 17:44:01,851 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: fiction_writing
+2026-01-11 17:44:01,855 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,866 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document fiction_writing for project default
+2026-01-11 17:44:01,868 - socrates.database.vector - DEBUG - Knowledge entry 'business_writing' already exists, skipping...
+2026-01-11 17:44:01,868 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: business_writing
+2026-01-11 17:44:01,900 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: business_writing
+2026-01-11 17:44:01,903 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,914 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document business_writing for project default
+2026-01-11 17:44:01,916 - socrates.database.vector - DEBUG - Knowledge entry 'blog_writing' already exists, skipping...
+2026-01-11 17:44:01,916 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: blog_writing
+2026-01-11 17:44:01,949 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: blog_writing
+2026-01-11 17:44:01,952 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:01,963 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document blog_writing for project default
+2026-01-11 17:44:01,964 - socrates.database.vector - DEBUG - Knowledge entry 'copywriting_persuasion' already exists, skipping...
+2026-01-11 17:44:01,965 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: copywriting_persuasion
+2026-01-11 17:44:01,997 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: copywriting_persuasion
+2026-01-11 17:44:02,000 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,012 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document copywriting_persuasion for project default
+2026-01-11 17:44:02,014 - socrates.database.vector - DEBUG - Knowledge entry 'word_choice_impact' already exists, skipping...
+2026-01-11 17:44:02,014 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: word_choice_impact
+2026-01-11 17:44:02,048 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: word_choice_impact
+2026-01-11 17:44:02,051 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,062 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document word_choice_impact for project default
+2026-01-11 17:44:02,064 - socrates.database.vector - DEBUG - Knowledge entry 'storytelling_engagement' already exists, skipping...
+2026-01-11 17:44:02,064 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: storytelling_engagement
+2026-01-11 17:44:02,096 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: storytelling_engagement
+2026-01-11 17:44:02,099 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,111 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document storytelling_engagement for project default
+2026-01-11 17:44:02,112 - socrates.database.vector - DEBUG - Knowledge entry 'agile_scrum_basics' already exists, skipping...
+2026-01-11 17:44:02,113 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: agile_scrum_basics
+2026-01-11 17:44:02,144 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: agile_scrum_basics
+2026-01-11 17:44:02,147 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,159 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document agile_scrum_basics for project default
+2026-01-11 17:44:02,161 - socrates.database.vector - DEBUG - Knowledge entry 'project_planning' already exists, skipping...
+2026-01-11 17:44:02,161 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: project_planning
+2026-01-11 17:44:02,194 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: project_planning
+2026-01-11 17:44:02,197 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,208 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document project_planning for project default
+2026-01-11 17:44:02,210 - socrates.database.vector - DEBUG - Knowledge entry 'risk_management' already exists, skipping...
+2026-01-11 17:44:02,210 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: risk_management
+2026-01-11 17:44:02,246 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: risk_management
+2026-01-11 17:44:02,249 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,261 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document risk_management for project default
+2026-01-11 17:44:02,262 - socrates.database.vector - DEBUG - Knowledge entry 'stakeholder_communication' already exists, skipping...
+2026-01-11 17:44:02,262 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: stakeholder_communication
+2026-01-11 17:44:02,292 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: stakeholder_communication
+2026-01-11 17:44:02,295 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,307 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document stakeholder_communication for project default
+2026-01-11 17:44:02,308 - socrates.database.vector - DEBUG - Knowledge entry 'resource_allocation' already exists, skipping...
+2026-01-11 17:44:02,309 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: resource_allocation
+2026-01-11 17:44:02,340 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: resource_allocation
+2026-01-11 17:44:02,342 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,353 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document resource_allocation for project default
+2026-01-11 17:44:02,355 - socrates.database.vector - DEBUG - Knowledge entry 'swot_analysis' already exists, skipping...
+2026-01-11 17:44:02,355 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: swot_analysis
+2026-01-11 17:44:02,387 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: swot_analysis
+2026-01-11 17:44:02,389 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,401 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document swot_analysis for project default
+2026-01-11 17:44:02,403 - socrates.database.vector - DEBUG - Knowledge entry 'market_analysis' already exists, skipping...
+2026-01-11 17:44:02,403 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: market_analysis
+2026-01-11 17:44:02,437 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: market_analysis
+2026-01-11 17:44:02,440 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,451 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document market_analysis for project default
+2026-01-11 17:44:02,452 - socrates.database.vector - DEBUG - Knowledge entry 'competitive_positioning' already exists, skipping...
+2026-01-11 17:44:02,453 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: competitive_positioning
+2026-01-11 17:44:02,483 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: competitive_positioning
+2026-01-11 17:44:02,486 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,499 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document competitive_positioning for project default
+2026-01-11 17:44:02,502 - socrates.database.vector - DEBUG - Knowledge entry 'goal_setting' already exists, skipping...
+2026-01-11 17:44:02,502 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: goal_setting
+2026-01-11 17:44:02,536 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: goal_setting
+2026-01-11 17:44:02,538 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,550 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document goal_setting for project default
+2026-01-11 17:44:02,553 - socrates.database.vector - DEBUG - Knowledge entry 'product_roadmap' already exists, skipping...
+2026-01-11 17:44:02,553 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: product_roadmap
+2026-01-11 17:44:02,583 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: product_roadmap
+2026-01-11 17:44:02,585 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,597 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document product_roadmap for project default
+2026-01-11 17:44:02,598 - socrates.database.vector - DEBUG - Knowledge entry 'user_stories' already exists, skipping...
+2026-01-11 17:44:02,598 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: user_stories
+2026-01-11 17:44:02,628 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: user_stories
+2026-01-11 17:44:02,632 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,643 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document user_stories for project default
+2026-01-11 17:44:02,644 - socrates.database.vector - DEBUG - Knowledge entry 'prioritization_frameworks' already exists, skipping...
+2026-01-11 17:44:02,645 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: prioritization_frameworks
+2026-01-11 17:44:02,675 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: prioritization_frameworks
+2026-01-11 17:44:02,677 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,689 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document prioritization_frameworks for project default
+2026-01-11 17:44:02,691 - socrates.database.vector - DEBUG - Knowledge entry 'team_communication' already exists, skipping...
+2026-01-11 17:44:02,691 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: team_communication
+2026-01-11 17:44:02,721 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: team_communication
+2026-01-11 17:44:02,724 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,736 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document team_communication for project default
+2026-01-11 17:44:02,737 - socrates.database.vector - DEBUG - Knowledge entry 'conflict_resolution' already exists, skipping...
+2026-01-11 17:44:02,737 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: conflict_resolution
+2026-01-11 17:44:02,768 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: conflict_resolution
+2026-01-11 17:44:02,771 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,784 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document conflict_resolution for project default
+2026-01-11 17:44:02,786 - socrates.database.vector - DEBUG - Knowledge entry 'delegation' already exists, skipping...
+2026-01-11 17:44:02,786 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: delegation
+2026-01-11 17:44:02,817 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: delegation
+2026-01-11 17:44:02,820 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,831 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document delegation for project default
+2026-01-11 17:44:02,832 - socrates.database.vector - DEBUG - Knowledge entry 'qualitative_methods' already exists, skipping...
+2026-01-11 17:44:02,833 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: qualitative_methods
+2026-01-11 17:44:02,864 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: qualitative_methods
+2026-01-11 17:44:02,868 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,880 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document qualitative_methods for project default
+2026-01-11 17:44:02,881 - socrates.database.vector - DEBUG - Knowledge entry 'quantitative_methods' already exists, skipping...
+2026-01-11 17:44:02,882 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: quantitative_methods
+2026-01-11 17:44:02,931 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: quantitative_methods
+2026-01-11 17:44:02,934 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,946 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document quantitative_methods for project default
+2026-01-11 17:44:02,947 - socrates.database.vector - DEBUG - Knowledge entry 'research_design' already exists, skipping...
+2026-01-11 17:44:02,947 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: research_design
+2026-01-11 17:44:02,978 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: research_design
+2026-01-11 17:44:02,980 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:02,992 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document research_design for project default
+2026-01-11 17:44:02,994 - socrates.database.vector - DEBUG - Knowledge entry 'hypothesis_testing' already exists, skipping...
+2026-01-11 17:44:02,994 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: hypothesis_testing
+2026-01-11 17:44:03,023 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: hypothesis_testing
+2026-01-11 17:44:03,026 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,037 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document hypothesis_testing for project default
+2026-01-11 17:44:03,039 - socrates.database.vector - DEBUG - Knowledge entry 'statistical_analysis' already exists, skipping...
+2026-01-11 17:44:03,039 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: statistical_analysis
+2026-01-11 17:44:03,069 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: statistical_analysis
+2026-01-11 17:44:03,072 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,090 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document statistical_analysis for project default
+2026-01-11 17:44:03,095 - socrates.database.vector - DEBUG - Knowledge entry 'thematic_analysis' already exists, skipping...
+2026-01-11 17:44:03,095 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: thematic_analysis
+2026-01-11 17:44:03,129 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: thematic_analysis
+2026-01-11 17:44:03,132 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,144 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document thematic_analysis for project default
+2026-01-11 17:44:03,145 - socrates.database.vector - DEBUG - Knowledge entry 'data_visualization' already exists, skipping...
+2026-01-11 17:44:03,145 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: data_visualization
+2026-01-11 17:44:03,177 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: data_visualization
+2026-01-11 17:44:03,180 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,191 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document data_visualization for project default
+2026-01-11 17:44:03,193 - socrates.database.vector - DEBUG - Knowledge entry 'literature_review' already exists, skipping...
+2026-01-11 17:44:03,193 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: literature_review
+2026-01-11 17:44:03,224 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: literature_review
+2026-01-11 17:44:03,228 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,239 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document literature_review for project default
+2026-01-11 17:44:03,241 - socrates.database.vector - DEBUG - Knowledge entry 'research_ethics' already exists, skipping...
+2026-01-11 17:44:03,241 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: research_ethics
+2026-01-11 17:44:03,273 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: research_ethics
+2026-01-11 17:44:03,276 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,287 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document research_ethics for project default
+2026-01-11 17:44:03,288 - socrates.database.vector - DEBUG - Knowledge entry 'results_presentation' already exists, skipping...
+2026-01-11 17:44:03,289 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: results_presentation
+2026-01-11 17:44:03,319 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: results_presentation
+2026-01-11 17:44:03,322 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,334 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document results_presentation for project default
+2026-01-11 17:44:03,336 - socrates.database.vector - DEBUG - Knowledge entry 'user_research' already exists, skipping...
+2026-01-11 17:44:03,336 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: user_research
+2026-01-11 17:44:03,366 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: user_research
+2026-01-11 17:44:03,369 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,380 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document user_research for project default
+2026-01-11 17:44:03,382 - socrates.database.vector - DEBUG - Knowledge entry 'personas_development' already exists, skipping...
+2026-01-11 17:44:03,382 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: personas_development
+2026-01-11 17:44:03,413 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: personas_development
+2026-01-11 17:44:03,416 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,427 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document personas_development for project default
+2026-01-11 17:44:03,429 - socrates.database.vector - DEBUG - Knowledge entry 'wireframing_prototyping' already exists, skipping...
+2026-01-11 17:44:03,429 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: wireframing_prototyping
+2026-01-11 17:44:03,459 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: wireframing_prototyping
+2026-01-11 17:44:03,462 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,473 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document wireframing_prototyping for project default
+2026-01-11 17:44:03,474 - socrates.database.vector - DEBUG - Knowledge entry 'usability_testing' already exists, skipping...
+2026-01-11 17:44:03,475 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: usability_testing
+2026-01-11 17:44:03,506 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: usability_testing
+2026-01-11 17:44:03,509 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,520 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document usability_testing for project default
+2026-01-11 17:44:03,521 - socrates.database.vector - DEBUG - Knowledge entry 'information_architecture' already exists, skipping...
+2026-01-11 17:44:03,521 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: information_architecture
+2026-01-11 17:44:03,550 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: information_architecture
+2026-01-11 17:44:03,553 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,565 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document information_architecture for project default
+2026-01-11 17:44:03,566 - socrates.database.vector - DEBUG - Knowledge entry 'typography_design' already exists, skipping...
+2026-01-11 17:44:03,566 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: typography_design
+2026-01-11 17:44:03,595 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: typography_design
+2026-01-11 17:44:03,598 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,612 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document typography_design for project default
+2026-01-11 17:44:03,613 - socrates.database.vector - DEBUG - Knowledge entry 'color_theory' already exists, skipping...
+2026-01-11 17:44:03,614 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: color_theory
+2026-01-11 17:44:03,643 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: color_theory
+2026-01-11 17:44:03,646 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,658 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document color_theory for project default
+2026-01-11 17:44:03,659 - socrates.database.vector - DEBUG - Knowledge entry 'design_systems' already exists, skipping...
+2026-01-11 17:44:03,659 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: design_systems
+2026-01-11 17:44:03,690 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: design_systems
+2026-01-11 17:44:03,693 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,704 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document design_systems for project default
+2026-01-11 17:44:03,706 - socrates.database.vector - DEBUG - Knowledge entry 'iteration_feedback' already exists, skipping...
+2026-01-11 17:44:03,706 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: iteration_feedback
+2026-01-11 17:44:03,736 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: iteration_feedback
+2026-01-11 17:44:03,739 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,751 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document iteration_feedback for project default
+2026-01-11 17:44:03,753 - socrates.database.vector - DEBUG - Knowledge entry 'accessibility_inclusive_design' already exists, skipping...
+2026-01-11 17:44:03,753 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: accessibility_inclusive_design
+2026-01-11 17:44:03,785 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: accessibility_inclusive_design
+2026-01-11 17:44:03,787 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,799 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document accessibility_inclusive_design for project default
+2026-01-11 17:44:03,800 - socrates.database.vector - DEBUG - Knowledge entry 'problem_decomposition' already exists, skipping...
+2026-01-11 17:44:03,801 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: problem_decomposition
+2026-01-11 17:44:03,831 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: problem_decomposition
+2026-01-11 17:44:03,834 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,845 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document problem_decomposition for project default
+2026-01-11 17:44:03,847 - socrates.database.vector - DEBUG - Knowledge entry 'root_cause_analysis' already exists, skipping...
+2026-01-11 17:44:03,847 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: root_cause_analysis
+2026-01-11 17:44:03,877 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: root_cause_analysis
+2026-01-11 17:44:03,880 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,891 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document root_cause_analysis for project default
+2026-01-11 17:44:03,893 - socrates.database.vector - DEBUG - Knowledge entry 'solution_evaluation' already exists, skipping...
+2026-01-11 17:44:03,893 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: solution_evaluation
+2026-01-11 17:44:03,926 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: solution_evaluation
+2026-01-11 17:44:03,929 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,940 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document solution_evaluation for project default
+2026-01-11 17:44:03,942 - socrates.database.vector - DEBUG - Knowledge entry 'systems_thinking' already exists, skipping...
+2026-01-11 17:44:03,942 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: systems_thinking
+2026-01-11 17:44:03,974 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: systems_thinking
+2026-01-11 17:44:03,977 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:03,987 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document systems_thinking for project default
+2026-01-11 17:44:03,989 - socrates.database.vector - DEBUG - Knowledge entry 'critical_thinking' already exists, skipping...
+2026-01-11 17:44:03,989 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: critical_thinking
+2026-01-11 17:44:04,020 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: critical_thinking
+2026-01-11 17:44:04,023 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,035 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document critical_thinking for project default
+2026-01-11 17:44:04,037 - socrates.database.vector - DEBUG - Knowledge entry 'active_listening' already exists, skipping...
+2026-01-11 17:44:04,037 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: active_listening
+2026-01-11 17:44:04,069 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: active_listening
+2026-01-11 17:44:04,072 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,083 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document active_listening for project default
+2026-01-11 17:44:04,085 - socrates.database.vector - DEBUG - Knowledge entry 'clear_writing' already exists, skipping...
+2026-01-11 17:44:04,085 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: clear_writing
+2026-01-11 17:44:04,118 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: clear_writing
+2026-01-11 17:44:04,121 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,132 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document clear_writing for project default
+2026-01-11 17:44:04,133 - socrates.database.vector - DEBUG - Knowledge entry 'public_speaking' already exists, skipping...
+2026-01-11 17:44:04,134 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: public_speaking
+2026-01-11 17:44:04,165 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: public_speaking
+2026-01-11 17:44:04,168 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,181 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document public_speaking for project default
+2026-01-11 17:44:04,183 - socrates.database.vector - DEBUG - Knowledge entry 'feedback_giving' already exists, skipping...
+2026-01-11 17:44:04,183 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: feedback_giving
+2026-01-11 17:44:04,213 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: feedback_giving
+2026-01-11 17:44:04,216 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,228 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document feedback_giving for project default
+2026-01-11 17:44:04,229 - socrates.database.vector - DEBUG - Knowledge entry 'team_dynamics' already exists, skipping...
+2026-01-11 17:44:04,230 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: team_dynamics
+2026-01-11 17:44:04,271 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: team_dynamics
+2026-01-11 17:44:04,274 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,288 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document team_dynamics for project default
+2026-01-11 17:44:04,290 - socrates.database.vector - DEBUG - Knowledge entry 'remote_work' already exists, skipping...
+2026-01-11 17:44:04,290 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: remote_work
+2026-01-11 17:44:04,321 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: remote_work
+2026-01-11 17:44:04,324 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,335 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document remote_work for project default
+2026-01-11 17:44:04,337 - socrates.database.vector - DEBUG - Knowledge entry 'asynchronous_collaboration' already exists, skipping...
+2026-01-11 17:44:04,337 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: asynchronous_collaboration
+2026-01-11 17:44:04,370 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: asynchronous_collaboration
+2026-01-11 17:44:04,373 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,384 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document asynchronous_collaboration for project default
+2026-01-11 17:44:04,386 - socrates.database.vector - DEBUG - Knowledge entry 'continuous_learning' already exists, skipping...
+2026-01-11 17:44:04,386 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: continuous_learning
+2026-01-11 17:44:04,418 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: continuous_learning
+2026-01-11 17:44:04,421 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,432 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document continuous_learning for project default
+2026-01-11 17:44:04,433 - socrates.database.vector - DEBUG - Knowledge entry 'skill_acquisition' already exists, skipping...
+2026-01-11 17:44:04,434 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: skill_acquisition
+2026-01-11 17:44:04,467 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: skill_acquisition
+2026-01-11 17:44:04,470 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,481 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document skill_acquisition for project default
+2026-01-11 17:44:04,482 - socrates.database.vector - DEBUG - Knowledge entry 'change_management' already exists, skipping...
+2026-01-11 17:44:04,483 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: change_management
+2026-01-11 17:44:04,516 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: change_management
+2026-01-11 17:44:04,519 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,530 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document change_management for project default
+2026-01-11 17:44:04,532 - socrates.database.vector - DEBUG - Knowledge entry 'growth_mindset' already exists, skipping...
+2026-01-11 17:44:04,532 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: growth_mindset
+2026-01-11 17:44:04,564 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: growth_mindset
+2026-01-11 17:44:04,568 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,578 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document growth_mindset for project default
+2026-01-11 17:44:04,580 - socrates.database.vector - DEBUG - Knowledge entry 'time_management' already exists, skipping...
+2026-01-11 17:44:04,580 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: time_management
+2026-01-11 17:44:04,612 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: time_management
+2026-01-11 17:44:04,615 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,626 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document time_management for project default
+2026-01-11 17:44:04,628 - socrates.database.vector - DEBUG - Knowledge entry 'stress_resilience' already exists, skipping...
+2026-01-11 17:44:04,628 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: stress_resilience
+2026-01-11 17:44:04,660 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: stress_resilience
+2026-01-11 17:44:04,663 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,674 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document stress_resilience for project default
+2026-01-11 17:44:04,675 - socrates.database.vector - DEBUG - Knowledge entry 'goal_alignment' already exists, skipping...
+2026-01-11 17:44:04,676 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: goal_alignment
+2026-01-11 17:44:04,705 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: goal_alignment
+2026-01-11 17:44:04,708 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,721 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document goal_alignment for project default
+2026-01-11 17:44:04,722 - socrates.database.vector - DEBUG - Knowledge entry 'mentoring_development' already exists, skipping...
+2026-01-11 17:44:04,723 - socrates.database.vector - DEBUG - Updating metadata for existing knowledge entry: mentoring_development
+2026-01-11 17:44:04,752 - socrates.database.vector - DEBUG - Updated metadata for knowledge entry: mentoring_development
+2026-01-11 17:44:04,755 - socratic_system.database.project_db.ProjectDatabase - DEBUG - file_path/file_size columns not found, inserting without them: table knowledge_documents has no column named file_path
+2026-01-11 17:44:04,766 - socratic_system.database.project_db.ProjectDatabase - DEBUG - Saved knowledge document mentoring_development for project default
+[32m[INFO][0m orchestrator: Knowledge base loaded: 100 entries added
+2026-01-11 17:44:04,767 - socrates.events - DEBUG - Event: knowledge.loaded - {'entry_count': 100, 'error_count': 0, 'status': 'success', 'timestamp': '2026-01-11T17:44:04.767947'}
+WARNING:  WatchFiles detected changes in 'src\socrates_api\routers\workflow.py'. Reloading...
+ 
