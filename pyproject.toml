@@ -18,7 +18,12 @@ dependencies = [
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
     "pydantic>=2.0.0",
-    "socrates-cli>=0.1.0",
+    # Note: socrates-cli will be added after it's published to PyPI
+    # "socrates-cli>=0.1.0",
+]
+
+[project.optional-dependencies]
+socratic = [
     "socratic-learning>=0.1.0",
     "socratic-analyzer>=0.1.0",
     "socratic-workflow>=0.1.0",
@@ -26,8 +31,22 @@ dependencies = [
     "socratic-agents>=0.1.0",
 ]
 
-[project.optional-dependencies]
 dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.24.0",
+    "black>=23.0.0",
+    "mypy>=1.5.0",
+    "ruff>=0.0.292",
+]
+
+all = [
+    "socratic-learning>=0.1.0",
+    "socratic-analyzer>=0.1.0",
+    "socratic-workflow>=0.1.0",
+    "socratic-conflict>=0.1.0",
+    "socratic-agents>=0.1.0",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "pytest-asyncio>=0.21.0",
