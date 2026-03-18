@@ -18,6 +18,7 @@ __email__ = "info@socrates-ai.dev"
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
     app = FastAPI(
@@ -62,6 +63,7 @@ def create_app() -> FastAPI:
         return {"status": "healthy", "version": __version__}
 
     return app
+
 
 # Create app instance
 app = create_app()
