@@ -1186,3 +1186,44 @@ class EcosystemHealthResponse(BaseModel):
     total_agents: int = Field(..., description="Total agents")
     average_effectiveness: float = Field(..., description="Average effectiveness")
     ecosystem_health: str = Field(..., description="Health status: excellent, good, fair, poor, no_data")
+
+
+# ============================================================================
+# Multi-Factor Authentication (MFA) Models
+# ============================================================================
+
+
+class MFASetupResponse(BaseModel):
+    """Response for MFA setup initialization"""
+
+    secret: str = Field(..., description="TOTP secret (base32 encoded)")
+    qr_code_uri: str = Field(..., description="QR code URI for authenticator app")
+    backup_codes: List[str] = Field(..., description="List of backup recovery codes")
+    recovery_codes_display: str = Field(..., description="Formatted backup codes for display")
+
+
+class MFAVerifyEnableRequest(BaseModel):
+    """Request to verify TOTP code and enable MFA"""
+
+    totp_code: str = Field(..., min_length=6, max_length=6, description="6-digit TOTP code")
+
+
+class MFAVerifyRequest(BaseModel):
+    """Request to verify MFA during login"""
+
+    username: str = Field(..., description="Username")
+    totp_code: Optional[str] = Field(None, description="6-digit TOTP code")
+    recovery_code: Optional[str] = Field(None, description="Recovery code (if TOTP unavailable)")
+
+
+class MFADisableRequest(BaseModel):
+    """Request to disable MFA"""
+
+    password: str = Field(..., description="User password for authentication")
+
+
+class MFAStatusResponse(BaseModel):
+    """Response showing MFA status"""
+
+    mfa_enabled: bool = Field(..., description="Whether MFA is enabled")
+    mfa_methods: List[str] = Field(default_factory=lambda: ["totp"], description="Enabled MFA methods")

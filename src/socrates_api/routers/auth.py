@@ -29,6 +29,11 @@ from socrates_api.models import (
     ChangePasswordRequest,
     ErrorResponse,
     LoginRequest,
+    MFADisableRequest,
+    MFASetupResponse,
+    MFAStatusResponse,
+    MFAVerifyEnableRequest,
+    MFAVerifyRequest,
     RefreshTokenRequest,
     RegisterRequest,
     TokenResponse,
@@ -44,6 +49,7 @@ try:
         check_password_breach,
         get_breach_checker,
         MFAManager,
+        get_mfa_manager,
     )
     SECURITY_AVAILABLE = True
 except ImportError:
@@ -51,6 +57,7 @@ except ImportError:
     get_breach_checker = None
     AccountLockoutManager = None
     MFAManager = None
+    get_mfa_manager = None
     SECURITY_AVAILABLE = False
 
 # Import rate limiter if available
@@ -64,6 +71,9 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 
 # Initialize account lockout manager if security module is available
 lockout_manager = AccountLockoutManager() if AccountLockoutManager else None
+
+# Initialize MFA manager if security module is available
+mfa_manager = get_mfa_manager() if get_mfa_manager else None
 
 
 def _get_rate_limit_decorator(limit_str: str):
@@ -320,6 +330,14 @@ async def login(
         if lockout_manager:
             lockout_manager.record_attempt(login_request.username, "api", success=True)
 
+        # Check if MFA is enabled for user
+        if mfa_manager and mfa_manager.is_mfa_enabled(login_request.username):
+            logger.info(f"MFA verification required for user: {login_request.username}")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="MFA verification required. Please provide TOTP code or recovery code at POST /auth/login/mfa-verify",
+            )
+
         # Extract client IP and User-Agent for token fingerprinting
         client_ip = http_request.client.host if http_request.client else "unknown"
         user_agent = http_request.headers.get("user-agent", "unknown")
@@ -369,6 +387,139 @@ async def login(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error during login",
+        )
+
+
+@router.post(
+    "/login/mfa-verify",
+    response_model=AuthResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Verify MFA during login",
+    responses={
+        200: {"description": "MFA verified, login successful"},
+        400: {"description": "Invalid MFA code", "model": ErrorResponse},
+        401: {"description": "Invalid credentials", "model": ErrorResponse},
+        429: {"description": "Too many failed attempts", "model": ErrorResponse},
+        503: {"description": "MFA not available", "model": ErrorResponse},
+    },
+)
+@_auth_limit
+async def login_mfa_verify(
+    request: MFAVerifyRequest,
+    http_request: Request,
+    db: ProjectDatabase = Depends(get_database),
+):
+    """
+    Verify MFA code after successful username/password authentication.
+
+    This endpoint is called when the login endpoint returns 403 Forbidden due to MFA being required.
+    Provide either a TOTP code (from authenticator app) or a recovery code.
+
+    Args:
+        request: MFAVerifyRequest with username and TOTP or recovery code
+        http_request: HTTP request for IP and User-Agent
+        db: Database connection
+
+    Returns:
+        AuthResponse with tokens if MFA verified successfully
+
+    Raises:
+        HTTPException: If MFA code invalid or user not found
+    """
+    try:
+        if not mfa_manager:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="MFA is not available",
+            )
+
+        # Verify that both totp_code and recovery_code are not both provided
+        if request.totp_code and request.recovery_code:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Provide either TOTP code or recovery code, not both",
+            )
+
+        # Verify that at least one is provided
+        if not request.totp_code and not request.recovery_code:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="TOTP code or recovery code required",
+            )
+
+        # Load user
+        user = db.load_user(request.username)
+        if user is None:
+            logger.warning(f"MFA verification for non-existent user: {request.username}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username or access code",
+            )
+
+        # Verify MFA code
+        mfa_result = mfa_manager.verify_mfa(
+            request.username,
+            totp_code=request.totp_code,
+            recovery_code=request.recovery_code,
+        )
+
+        if not mfa_result.is_valid:
+            logger.warning(f"MFA verification failed for user: {request.username}: {mfa_result.error}")
+            if lockout_manager:
+                lockout_manager.check_and_lock(request.username, "api")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=mfa_result.error or "Invalid MFA code",
+            )
+
+        logger.info(f"MFA verification successful for user: {request.username}")
+
+        # Extract client IP and User-Agent for token fingerprinting
+        client_ip = http_request.client.host if http_request.client else "unknown"
+        user_agent = http_request.headers.get("user-agent", "unknown")
+
+        # Create tokens with fingerprinting
+        access_token = create_access_token(
+            request.username,
+            ip_address=client_ip,
+            user_agent=user_agent,
+        )
+        refresh_token = create_refresh_token(request.username)
+
+        # Store refresh token in database
+        _store_refresh_token(db, request.username, refresh_token)
+
+        # Check if user has API key configured
+        api_key_configured = True
+        api_key_message = None
+        try:
+            stored_api_key = db.get_api_key(request.username, "claude")
+            if not stored_api_key:
+                api_key_configured = False
+                api_key_message = (
+                    "No API key configured. "
+                    "Please save your API key in Settings > LLM > Anthropic to use AI features."
+                )
+        except Exception as e:
+            logger.warning(f"Error checking API key for user {request.username}: {e}")
+
+        return AuthResponse(
+            user=_user_to_response(user),
+            access_token=access_token,
+            refresh_token=refresh_token,
+            token_type="bearer",
+            expires_in=900,
+            api_key_configured=api_key_configured,
+            api_key_message=api_key_message,
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during MFA verification for user {request.username}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error verifying MFA",
         )
 
 
@@ -555,6 +706,254 @@ async def change_password(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error changing password",
+        )
+
+
+# ============================================================================
+# Multi-Factor Authentication (MFA) Endpoints
+# ============================================================================
+
+
+@router.post(
+    "/mfa/enable",
+    response_model=MFASetupResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Initialize MFA setup",
+    responses={
+        200: {"description": "MFA setup initialized successfully"},
+        401: {"description": "Not authenticated", "model": ErrorResponse},
+        503: {"description": "MFA not available", "model": ErrorResponse},
+    },
+)
+async def mfa_enable(
+    current_user: str = Depends(get_current_user),
+):
+    """
+    Initialize MFA setup for the current user.
+
+    Generates a TOTP secret, QR code for authenticator app, and backup recovery codes.
+    User must verify the TOTP code before MFA is fully enabled.
+
+    Args:
+        current_user: Current authenticated user (from JWT)
+
+    Returns:
+        MFASetupResponse with secret, QR code URI, and backup codes
+
+    Raises:
+        HTTPException: If MFA not available
+    """
+    try:
+        if not mfa_manager:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="MFA is not available",
+            )
+
+        # Generate TOTP secret and backup codes
+        mfa_setup = mfa_manager.generate_secret(current_user)
+
+        logger.info(f"MFA setup initialized for user: {current_user}")
+
+        return MFASetupResponse(
+            secret=mfa_setup.secret,
+            qr_code_uri=mfa_setup.qr_code_uri,
+            backup_codes=mfa_setup.backup_codes,
+            recovery_codes_display=mfa_setup.recovery_codes_display,
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error initializing MFA setup for user {current_user}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error initializing MFA",
+        )
+
+
+@router.post(
+    "/mfa/verify-enable",
+    response_model=APIResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Verify TOTP and enable MFA",
+    responses={
+        200: {"description": "MFA enabled successfully"},
+        400: {"description": "Invalid TOTP code", "model": ErrorResponse},
+        401: {"description": "Not authenticated", "model": ErrorResponse},
+        503: {"description": "MFA not available", "model": ErrorResponse},
+    },
+)
+async def mfa_verify_enable(
+    request: MFAVerifyEnableRequest,
+    current_user: str = Depends(get_current_user),
+):
+    """
+    Verify TOTP code and enable MFA for the current user.
+
+    User must provide the 6-digit code from their authenticator app to complete setup.
+
+    Args:
+        request: MFAVerifyEnableRequest with TOTP code
+        current_user: Current authenticated user (from JWT)
+
+    Returns:
+        APIResponse confirming MFA enabled
+
+    Raises:
+        HTTPException: If TOTP code invalid or MFA not available
+    """
+    try:
+        if not mfa_manager:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="MFA is not available",
+            )
+
+        # Verify TOTP code and enable MFA
+        success, message = mfa_manager.enable_mfa(
+            current_user,
+            mfa_manager.get_totp_secret(current_user),
+            request.totp_code,
+        )
+
+        if not success:
+            logger.warning(f"MFA verification failed for user {current_user}: {message}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=message,
+            )
+
+        # Log the MFA enablement event
+        if mfa_manager:
+            logger.info(f"MFA enabled successfully for user: {current_user}")
+
+        return APIResponse(
+            success=True,
+            status="success",
+            message="MFA enabled successfully. Keep your backup codes safe!",
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error verifying MFA for user {current_user}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error enabling MFA",
+        )
+
+
+@router.post(
+    "/mfa/disable",
+    response_model=APIResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Disable MFA",
+    responses={
+        200: {"description": "MFA disabled successfully"},
+        401: {"description": "Invalid password or not authenticated", "model": ErrorResponse},
+        503: {"description": "MFA not available", "model": ErrorResponse},
+    },
+)
+async def mfa_disable(
+    request: MFADisableRequest,
+    current_user: str = Depends(get_current_user),
+    db: ProjectDatabase = Depends(get_database),
+):
+    """
+    Disable MFA for the current user.
+
+    Requires password verification for security. User will need to re-enable MFA
+    to use it again.
+
+    Args:
+        request: MFADisableRequest with user password
+        current_user: Current authenticated user (from JWT)
+        db: Database connection
+
+    Returns:
+        APIResponse confirming MFA disabled
+
+    Raises:
+        HTTPException: If password invalid or MFA not available
+    """
+    try:
+        if not mfa_manager:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="MFA is not available",
+            )
+
+        # Load user and verify password
+        user = db.load_user(current_user)
+        if user is None or not verify_password(request.password, user.passcode_hash):
+            logger.warning(f"MFA disable attempt with invalid password for user {current_user}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid password",
+            )
+
+        # Disable MFA
+        mfa_manager.disable_mfa(current_user)
+
+        logger.info(f"MFA disabled for user: {current_user}")
+
+        return APIResponse(
+            success=True,
+            status="success",
+            message="MFA disabled successfully",
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error disabling MFA for user {current_user}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error disabling MFA",
+        )
+
+
+@router.get(
+    "/mfa/status",
+    response_model=MFAStatusResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Check MFA status",
+    responses={
+        200: {"description": "MFA status retrieved"},
+        401: {"description": "Not authenticated", "model": ErrorResponse},
+    },
+)
+async def mfa_status(
+    current_user: str = Depends(get_current_user),
+):
+    """
+    Check if MFA is enabled for the current user.
+
+    Args:
+        current_user: Current authenticated user (from JWT)
+
+    Returns:
+        MFAStatusResponse with MFA enabled status
+
+    Raises:
+        HTTPException: If not authenticated
+    """
+    try:
+        mfa_enabled = False
+        if mfa_manager:
+            mfa_enabled = mfa_manager.is_mfa_enabled(current_user)
+
+        return MFAStatusResponse(
+            mfa_enabled=mfa_enabled,
+            mfa_methods=["totp"] if mfa_enabled else [],
+        )
+
+    except Exception as e:
+        logger.error(f"Error checking MFA status for user {current_user}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error checking MFA status",
         )
 
 
