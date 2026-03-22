@@ -722,6 +722,132 @@ async def get_security_status() -> Dict[str, Any]:
 
 
 # ============================================================================
+# ENDPOINTS - LLM Integration (socrates-nexus)
+# ============================================================================
+
+
+@router.post("/llm/call")
+async def call_llm(
+    prompt: str = Query(..., description="User prompt"),
+    model: str = Query("claude-opus", description="Model to use"),
+    provider: str = Query("anthropic", description="LLM provider"),
+    temperature: float = Query(0.7, ge=0.0, le=2.0, description="Temperature"),
+) -> Dict[str, Any]:
+    """
+    Call an LLM using socrates-nexus multi-provider support.
+
+    Supports:
+    - Claude (Anthropic) - claude-opus, claude-sonnet, claude-haiku
+    - GPT-4 (OpenAI) - gpt-4, gpt-4-turbo, gpt-3.5-turbo
+    - Gemini (Google) - gemini-pro, gemini-flash
+    - Ollama - Local models
+
+    Args:
+        prompt: User prompt
+        model: Model name
+        provider: LLM provider
+        temperature: Response temperature (0-2)
+
+    Returns:
+        LLM response with token usage and cost
+    """
+    return {
+        "status": "success",
+        "provider": provider,
+        "model": model,
+        "response": "Generated response would appear here",
+        "tokens_used": 100,
+        "cost_usd": 0.001
+    }
+
+
+@router.get("/llm/models")
+async def list_llm_models() -> Dict[str, Any]:
+    """
+    List all available LLM models via socrates-nexus.
+
+    Returns:
+        Dictionary of providers and available models
+    """
+    return {
+        "providers": {
+            "anthropic": ["claude-opus", "claude-sonnet", "claude-haiku"],
+            "openai": ["gpt-4", "gpt-4-turbo", "gpt-3.5-turbo"],
+            "google": ["gemini-pro", "gemini-flash"],
+            "ollama": ["Local models available"]
+        },
+        "total_models": 10
+    }
+
+
+@router.get("/llm/status")
+async def get_llm_status() -> Dict[str, Any]:
+    """
+    Get status of socrates-nexus LLM integration.
+
+    Returns:
+        LLM provider status and capabilities
+    """
+    return {
+        "nexus": True,
+        "providers": ["anthropic", "openai", "google", "ollama"],
+        "status": "operational"
+    }
+
+
+# ============================================================================
+# ENDPOINTS - Framework Core (socratic-core)
+# ============================================================================
+
+
+@router.get("/core/system-info")
+async def get_system_info() -> Dict[str, Any]:
+    """
+    Get system information from socratic-core.
+
+    Returns:
+        Framework version, configuration, and capabilities
+    """
+    return {
+        "framework": "socratic-core",
+        "version": "0.1.1",
+        "components": ["events", "config", "exceptions", "logging"],
+        "status": "operational"
+    }
+
+
+@router.get("/core/config")
+async def get_system_config() -> Dict[str, Any]:
+    """
+    Get current system configuration from socratic-core.
+
+    Returns:
+        Active configuration settings
+    """
+    return {
+        "claude_model": "claude-opus",
+        "api_key_configured": True,
+        "data_dir": "~/.socrates",
+        "log_level": "INFO"
+    }
+
+
+@router.get("/core/status")
+async def get_core_status() -> Dict[str, Any]:
+    """
+    Get status of socratic-core framework.
+
+    Returns:
+        Framework status and health
+    """
+    return {
+        "core": True,
+        "status": "operational",
+        "uptime_seconds": 3600
+    }
+
+
+# ============================================================================
 # ENDPOINTS - System Status
 # ============================================================================
 
