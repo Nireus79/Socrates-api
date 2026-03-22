@@ -92,6 +92,62 @@ def _user_to_response(user: User) -> UserResponse:
     )
 
 
+@router.get(
+    "/csrf-token",
+    response_model=APIResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get CSRF token",
+    responses={
+        200: {"description": "CSRF token retrieved successfully"},
+    },
+)
+async def get_csrf_token(http_request: Request):
+    """
+    Get a CSRF token for web UI form submissions.
+
+    This endpoint returns a CSRF token that should be included in:
+    - POST/PUT/DELETE request headers as X-CSRF-Token
+    - Form submissions as _csrf field
+    - Or passed in _csrf query parameter
+
+    The token is automatically set as an HTTP-only cookie by the middleware.
+    Token expires after 1 hour of inactivity.
+
+    Note: CSRF protection is primarily for web UI endpoints, not for API clients
+    that use proper authentication and CORS.
+
+    Returns:
+        APIResponse with message about CSRF token
+
+    Example:
+        ```bash
+        # Get CSRF token
+        curl http://localhost:8000/auth/csrf-token
+
+        # Use in form submission
+        curl -X POST http://localhost:8000/auth/login \\
+          -H "X-CSRF-Token: <token>" \\
+          -H "Content-Type: application/json" \\
+          -d '{"username":"alice","password":"password"}'
+        ```
+    """
+    from socrates_api.middleware.csrf import generate_csrf_token
+
+    csrf_token = generate_csrf_token()
+    logger.info(f"CSRF token generated for client {http_request.client.host if http_request.client else 'unknown'}")
+
+    return APIResponse(
+        success=True,
+        status="success",
+        message="CSRF token generated. Include X-CSRF-Token header or _csrf field in requests.",
+        data={
+            "csrf_token": csrf_token,
+            "expires_in": 3600,  # 1 hour in seconds
+            "header_name": "X-CSRF-Token",
+        },
+    )
+
+
 @router.post(
     "/register",
     response_model=AuthResponse,
