@@ -12,6 +12,7 @@ from socrates_api.routers.code_generation import router as code_generation_route
 from socrates_api.routers.collaboration import collab_router
 from socrates_api.routers.collaboration import router as collaboration_router
 from socrates_api.routers.commands import router as commands_router
+from socrates_api.routers.conflicts import router as conflicts_router
 from socrates_api.routers.events import router as events_router
 from socrates_api.routers.finalization import router as finalization_router
 from socrates_api.routers.free_session import router as free_session_router
@@ -52,6 +53,7 @@ __all__ = [
     "query_router",
     "knowledge_management_router",
     "commands_router",
+    "conflicts_router",
     "skills_router",
     "progress_router",
     "system_router",

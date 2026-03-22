@@ -59,6 +59,7 @@ from .routers import (
     collab_router,
     collaboration_router,
     commands_router,
+    conflicts_router,
     events_router,
     finalization_router,
     free_session_router,
@@ -440,6 +441,7 @@ logger.info(f"CORS configured for {environment} environment with origins: {allow
 # Include API routers
 app.include_router(auth_router)
 app.include_router(commands_router)
+app.include_router(conflicts_router)
 app.include_router(projects_router)
 app.include_router(collaboration_router)
 app.include_router(collab_router)
