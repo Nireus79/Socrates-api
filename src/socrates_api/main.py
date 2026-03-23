@@ -28,7 +28,7 @@ from socrates_api.middleware.rate_limit import (
     initialize_limiter,
 )
 from socrates_api.middleware.security_headers import add_security_headers_middleware
-# REMOVED LOCAL IMPORT: from socratic_system.orchestration.orchestrator import AgentOrchestrator
+from socrates_api.orchestrator import APIOrchestrator, get_orchestrator as create_orchestrator
 
 from .models import (
     AskQuestionRequest,
@@ -96,7 +96,7 @@ app_state = {
 }
 
 
-def get_orchestrator() -> AgentOrchestrator:
+def get_orchestrator_from_state() -> APIOrchestrator:
     """Dependency injection for orchestrator"""
     if app_state["orchestrator"] is None:
         raise RuntimeError("Orchestrator not initialized. Call /initialize first.")
@@ -130,7 +130,7 @@ def conditional_rate_limit(limit_string: str):
     return decorator
 
 
-def _setup_event_listeners(orchestrator: AgentOrchestrator):
+def _setup_event_listeners(orchestrator: APIOrchestrator):
     """Setup listeners for orchestrator events"""
     if app_state["event_listeners_registered"]:
         return
@@ -216,27 +216,22 @@ async def lifespan(app: FastAPI):
 
         # Create and initialize orchestrator
         # If no env API key, use a placeholder - actual keys will be fetched per-user from database
-        logger.info("Creating AgentOrchestrator...")
-        orchestrator = AgentOrchestrator(
-            api_key_or_config=api_key or "placeholder-key-will-use-user-specific-keys"
+        logger.info("Creating APIOrchestrator...")
+        orchestrator = create_orchestrator(
+            api_key=api_key or "placeholder-key-will-use-user-specific-keys"
         )
-        logger.info("AgentOrchestrator created successfully")
+        logger.info("APIOrchestrator created successfully with real agents")
 
-        # Test connection only if we have an env API key
-        if api_key:
-            try:
-                logger.info("Testing API connection with environment API key...")
-                orchestrator.claude_client.test_connection()
-                logger.info("Orchestrator initialized successfully with valid environment API key")
-            except Exception as e:
-                logger.warning(
-                    f"Environment API key connection test failed: {type(e).__name__}: {str(e)[:100]}"
-                )
-                logger.info(
-                    "Orchestrator initialized but will rely on per-user API keys from database"
-                )
+        # Test that agents loaded correctly
+        system_info = orchestrator.get_system_info()
+        logger.info(f"Orchestrator status: {system_info}")
+
+        if system_info.get("agents_loaded", 0) > 0:
+            logger.info(f"Orchestrator initialized with {system_info['agents_loaded']} agents")
         else:
-            logger.info(
+            logger.warning("Orchestrator initialized but no agents loaded")
+
+        logger.info(
                 "No environment API key set. System will use per-user API keys from database."
             )
 
@@ -652,30 +647,19 @@ async def initialize(request: Optional[InitializeRequest] = Body(None)):
             # Fall back to environment variable
             api_key = os.getenv("ANTHROPIC_API_KEY")
 
-        # If no API key provided, that's okay - users will provide their own via UI
+        # Create orchestrator with provided API key or placeholder
+        logger.info("Creating APIOrchestrator...")
+        orchestrator = create_orchestrator(api_key=api_key or "placeholder-key-will-use-user-specific-keys")
+
+        # Test that orchestrator initialized properly
+        system_info = orchestrator.get_system_info()
+        if system_info.get("agents_loaded", 0) == 0:
+            logger.warning("Orchestrator initialized but no agents loaded")
+
         if api_key:
-            logger.info("Initializing with provided API key")
-
-            # Create orchestrator with provided API key
-            orchestrator = AgentOrchestrator(api_key_or_config=api_key)
-
-            # Test connection
-            try:
-                orchestrator.claude_client.test_connection()
-                logger.info("API key connection successful")
-            except Exception as e:
-                logger.warning(f"API key connection test failed: {e}")
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"API key is invalid: {str(e)}"
-                )
+            logger.info("Orchestrator initialized with provided API key")
         else:
-            logger.info("No API key provided in request. Using placeholder for per-user keys from database")
-
-            # Create orchestrator with placeholder - will use per-user keys
-            orchestrator = AgentOrchestrator(
-                api_key_or_config="placeholder-key-will-use-user-specific-keys"
-            )
+            logger.info("Orchestrator initialized - will use per-user API keys from database")
 
         # Setup event listeners
         _setup_event_listeners(orchestrator)

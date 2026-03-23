@@ -24,7 +24,6 @@ from socrates_api.auth import (
 )
 from socrates_api.database import get_database
 from socrates_api.models import (
-from socrates_api.models_local import User, ProjectDatabase
     APIResponse,
     AuthResponse,
     ChangePasswordRequest,
@@ -40,8 +39,7 @@ from socrates_api.models_local import User, ProjectDatabase
     TokenResponse,
     UserResponse,
 )
-# Database import replaced with local module
-# Removed local import: from socratic_system.models import User
+from socrates_api.models_local import User, ProjectDatabase
 
 # Import security features (REQUIRED)
 from socratic_security.auth import (

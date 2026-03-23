@@ -41,7 +41,6 @@ from socrates_api.auth.project_access import (
 from socrates_api.database import get_database
 from socrates_api.middleware import SubscriptionChecker
 from socrates_api.models import (
-from socrates_api.models_local import User, ProjectDatabase, ProjectContext
     APIResponse,
     CreateProjectRequest,
     ErrorResponse,
@@ -49,7 +48,7 @@ from socrates_api.models_local import User, ProjectDatabase, ProjectContext
     ProjectResponse,
     UpdateProjectRequest,
 )
-# Local imports - no external local code dependencies
+from socrates_api.models_local import User, ProjectDatabase, ProjectContext
 import uuid
 
 logger = logging.getLogger(__name__)
