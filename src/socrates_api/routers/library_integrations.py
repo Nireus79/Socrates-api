@@ -31,7 +31,7 @@ Interface Packages:
 import logging
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Body, HTTPException, Query
 
 from socrates_api.orchestrator import get_orchestrator
 
@@ -94,8 +94,8 @@ async def analyze_code_quality(
 async def log_learning_interaction(
     session_id: str = Query(..., description="Learning session ID"),
     agent_name: str = Query(..., description="Agent name"),
-    input_data: Dict[str, Any] = Query(..., description="Input to agent"),
-    output_data: Dict[str, Any] = Query(..., description="Output from agent"),
+    input_data: Dict[str, Any] = Body(..., description="Input to agent"),
+    output_data: Dict[str, Any] = Body(..., description="Output from agent"),
     tokens_used: int = Query(0, description="LLM tokens used"),
     cost: float = Query(0.0, description="Cost in USD"),
     duration_ms: float = Query(0.0, description="Duration in milliseconds"),
@@ -369,6 +369,96 @@ async def get_docs_status() -> Dict[str, Any]:
         return {"status": "error", "message": str(e)}
 
 
+@router.post("/docs/generate-api")
+async def generate_api_documentation(
+    code_structure: Dict[str, Any] = Body(..., description="Code structure with classes/functions")
+) -> str:
+    """
+    Generate API documentation from code structure using socratic-docs.
+
+    Args:
+        code_structure: Dictionary with code structure containing classes and functions
+
+    Returns:
+        Generated API documentation as markdown string
+    """
+    try:
+        orchestrator = get_orchestrator()
+        result = orchestrator.generate_api_documentation(code_structure)
+        return result
+    except Exception as e:
+        logger.error(f"API documentation generation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/docs/generate-architecture")
+async def generate_architecture_documentation(
+    modules: List[str] = Query(..., description="List of module names")
+) -> str:
+    """
+    Generate architecture documentation using socratic-docs.
+
+    Args:
+        modules: List of module names to document
+
+    Returns:
+        Generated architecture documentation as markdown string
+    """
+    try:
+        orchestrator = get_orchestrator()
+        result = orchestrator.generate_architecture_docs(modules)
+        return result
+    except Exception as e:
+        logger.error(f"Architecture documentation generation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/docs/generate-setup")
+async def generate_setup_documentation(
+    project: Dict[str, Any] = Body(..., description="Project metadata")
+) -> str:
+    """
+    Generate setup/installation guide using socratic-docs.
+
+    Args:
+        project: Project metadata dictionary
+
+    Returns:
+        Generated setup guide as markdown string
+    """
+    try:
+        orchestrator = get_orchestrator()
+        result = orchestrator.generate_setup_guide(project)
+        return result
+    except Exception as e:
+        logger.error(f"Setup guide generation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/docs/generate-all")
+async def generate_all_documentation(
+    project: Dict[str, Any] = Body(..., description="Project metadata"),
+    code_structure: Dict[str, Any] = Body(..., description="Code structure")
+) -> Dict[str, str]:
+    """
+    Generate complete documentation set (README, API, ARCHITECTURE, SETUP) using socratic-docs.
+
+    Args:
+        project: Project metadata dictionary
+        code_structure: Code structure dictionary
+
+    Returns:
+        Dictionary with complete documentation set
+    """
+    try:
+        orchestrator = get_orchestrator()
+        result = orchestrator.generate_all_documentation(project, code_structure)
+        return result
+    except Exception as e:
+        logger.error(f"Complete documentation generation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ============================================================================
 # ENDPOINTS - Workflow Orchestration (socratic-workflow)
 # ============================================================================
@@ -505,6 +595,74 @@ async def get_performance_status() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Failed to get performance status: {e}")
         return {"status": "error", "message": str(e)}
+
+
+@router.get("/performance/cache-stats")
+async def get_cache_statistics() -> Dict[str, Any]:
+    """
+    Get cache statistics using socratic-performance.
+
+    Returns:
+        Cache hit/miss ratios and entry counts
+    """
+    try:
+        orchestrator = get_orchestrator()
+        result = orchestrator.get_cache_stats()
+        return result
+    except Exception as e:
+        logger.error(f"Failed to get cache statistics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/performance/cache-clear")
+async def clear_cache() -> Dict[str, Any]:
+    """
+    Clear all cache entries using socratic-performance.
+
+    Returns:
+        Cache clear confirmation
+    """
+    try:
+        orchestrator = get_orchestrator()
+        result = orchestrator.clear_cache()
+        return result
+    except Exception as e:
+        logger.error(f"Failed to clear cache: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/performance/profiler-reset")
+async def reset_profiler_stats() -> Dict[str, Any]:
+    """
+    Reset profiler statistics using socratic-performance.
+
+    Returns:
+        Profiler reset confirmation
+    """
+    try:
+        orchestrator = get_orchestrator()
+        result = orchestrator.reset_profiler()
+        return result
+    except Exception as e:
+        logger.error(f"Failed to reset profiler: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/performance/dashboard")
+async def get_performance_dashboard() -> Dict[str, Any]:
+    """
+    Get comprehensive performance dashboard using socratic-performance.
+
+    Returns:
+        Complete performance overview with profiler stats, cache metrics, and system status
+    """
+    try:
+        orchestrator = get_orchestrator()
+        result = orchestrator.get_performance_dashboard()
+        return result
+    except Exception as e:
+        logger.error(f"Failed to get performance dashboard: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ============================================================================

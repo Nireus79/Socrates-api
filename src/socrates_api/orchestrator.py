@@ -6,7 +6,7 @@ Provides unified interface for REST API endpoints to call agents and orchestrato
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,15 @@ class APIOrchestrator:
         self.agents = {}
         self.skill_orchestrator = None
         self.workflow_orchestrator = None
+
+        # Initialize documentation and performance tools
+        self.doc_generator = None
+        self.profiler = None
+        self.cache = None
+
         self._initialize_agents()
+        self._initialize_documentation()
+        self._initialize_performance_monitoring()
         logger.info("API Orchestrator initialized with real agents")
 
     def _initialize_agents(self) -> None:
@@ -406,6 +414,125 @@ class APIOrchestrator:
         except Exception as e:
             logger.error(f"Failed to log interaction: {e}")
             return False
+
+    def _initialize_documentation(self) -> None:
+        """Initialize documentation generator"""
+        try:
+            from socratic_docs import DocumentationGenerator
+            self.doc_generator = DocumentationGenerator()
+            logger.info("Documentation generator initialized")
+        except Exception as e:
+            logger.warning(f"Documentation generator not available: {e}")
+            self.doc_generator = None
+
+    def _initialize_performance_monitoring(self) -> None:
+        """Initialize performance monitoring tools"""
+        try:
+            from socratic_performance import QueryProfiler, TTLCache
+            self.profiler = QueryProfiler()
+            self.cache = TTLCache(ttl_minutes=30)
+            logger.info("Performance monitoring initialized")
+        except Exception as e:
+            logger.warning(f"Performance monitoring not available: {e}")
+            self.profiler = None
+            self.cache = None
+
+    # Documentation methods
+    def generate_api_documentation(self, code_structure: Dict[str, Any]) -> str:
+        """Generate API documentation from code structure"""
+        try:
+            if not self.doc_generator:
+                return "# API Documentation\n\nDocumentation generator not available"
+            result = self.doc_generator.generate_api_documentation(code_structure)
+            return result if result else "# API Documentation\n\nNo documentation generated"
+        except Exception as e:
+            logger.error(f"API documentation generation failed: {e}")
+            return f"# API Documentation\n\nError: {str(e)}"
+
+    def generate_architecture_docs(self, modules: List[str]) -> str:
+        """Generate architecture documentation"""
+        try:
+            if not self.doc_generator:
+                return "# Architecture Documentation\n\nDocumentation generator not available"
+            result = self.doc_generator.generate_architecture_docs(modules)
+            return result if result else "# Architecture Documentation\n\nNo documentation generated"
+        except Exception as e:
+            logger.error(f"Architecture documentation generation failed: {e}")
+            return f"# Architecture Documentation\n\nError: {str(e)}"
+
+    def generate_setup_guide(self, project: Dict[str, Any]) -> str:
+        """Generate setup/installation guide"""
+        try:
+            if not self.doc_generator:
+                return "# Setup Guide\n\nDocumentation generator not available"
+            result = self.doc_generator.generate_setup_guide(project)
+            return result if result else "# Setup Guide\n\nNo guide generated"
+        except Exception as e:
+            logger.error(f"Setup guide generation failed: {e}")
+            return f"# Setup Guide\n\nError: {str(e)}"
+
+    def generate_all_documentation(self, project: Dict[str, Any],
+                                  code_structure: Dict[str, Any]) -> Dict[str, str]:
+        """Generate complete documentation set"""
+        try:
+            if not self.doc_generator:
+                return {"error": "Documentation generator not available"}
+            result = self.doc_generator.generate_all(project, code_structure)
+            return result if isinstance(result, dict) else {"error": "Invalid documentation format"}
+        except Exception as e:
+            logger.error(f"Complete documentation generation failed: {e}")
+            return {"error": str(e)}
+
+    # Performance methods
+    def get_cache_stats(self) -> Dict[str, Any]:
+        """Get cache statistics"""
+        try:
+            if not self.cache:
+                return {"error": "Cache not available"}
+            return self.cache.stats()
+        except Exception as e:
+            logger.error(f"Failed to get cache stats: {e}")
+            return {"error": str(e)}
+
+    def clear_cache(self) -> Dict[str, Any]:
+        """Clear all cache entries"""
+        try:
+            if not self.cache:
+                return {"error": "Cache not available"}
+            self.cache.clear()
+            return {"status": "success", "message": "Cache cleared"}
+        except Exception as e:
+            logger.error(f"Failed to clear cache: {e}")
+            return {"status": "error", "message": str(e)}
+
+    def reset_profiler(self) -> Dict[str, Any]:
+        """Reset profiler statistics"""
+        try:
+            if not self.profiler:
+                return {"error": "Profiler not available"}
+            self.profiler.reset()
+            return {"status": "success", "message": "Profiler reset"}
+        except Exception as e:
+            logger.error(f"Failed to reset profiler: {e}")
+            return {"status": "error", "message": str(e)}
+
+    def get_performance_dashboard(self) -> Dict[str, Any]:
+        """Get comprehensive performance dashboard"""
+        try:
+            result = {"status": "operational"}
+
+            if self.profiler:
+                stats = self.profiler.get_stats()
+                result["profiler"] = stats if stats else {}
+
+            if self.cache:
+                cache_stats = self.cache.stats()
+                result["cache"] = cache_stats if cache_stats else {}
+
+            return result
+        except Exception as e:
+            logger.error(f"Failed to get performance dashboard: {e}")
+            return {"status": "error", "message": str(e)}
 
 
 # Global instance

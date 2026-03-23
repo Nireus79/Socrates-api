@@ -327,6 +327,12 @@ from socrates_api.middleware.audit import AuditMiddleware, initialize_audit_logg
 
 app.add_middleware(AuditMiddleware)
 
+# Add performance monitoring middleware
+from socrates_api.middleware.performance import PerformanceMiddleware
+
+app.add_middleware(PerformanceMiddleware)
+logger.info("Performance monitoring middleware enabled")
+
 # Configure CORS based on environment
 if environment == "production":
     # Production: Only allow specific origins
