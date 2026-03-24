@@ -20,7 +20,7 @@ from pydantic import BaseModel
 from socrates_api.auth import get_current_user
 from socrates_api.database import get_database
 from socrates_api.models import APIResponse
-from socrates_api.models_local import User
+from socrates_api.models_local import User, StorageQuotaManager
 
 # Local tier definitions (replaces non-existent socratic_system.subscription.tiers)
 TIER_LIMITS = {
@@ -89,14 +89,32 @@ def _build_subscription_tiers():
         "enterprise": "For organizations and enterprises",
     }
 
+    tier_prices = {
+        "free": 0.0,
+        "pro": 29.0,
+        "enterprise": 299.0,
+    }
+
+    tier_storage = {
+        "free": 5,
+        "pro": 100,
+        "enterprise": -1,
+    }
+
+    tier_members = {
+        "free": 1,
+        "pro": 10,
+        "enterprise": -1,
+    }
+
     for tier_name, tier_limits in TIER_LIMITS.items():
         tiers[tier_name] = {
             "tier": tier_name,
-            "display_name": tier_limits.name,
-            "price": tier_limits.monthly_cost,
-            "projects_limit": tier_limits.max_projects,
-            "team_members_limit": tier_limits.max_team_members,
-            "storage_gb": tier_limits.storage_gb,
+            "display_name": tier_name.capitalize(),
+            "price": tier_prices.get(tier_name, 0.0),
+            "projects_limit": tier_limits.get("max_projects", 0),
+            "team_members_limit": tier_members.get(tier_name, 1),
+            "storage_gb": tier_storage.get(tier_name, 5),
             "features": feature_descriptions.get(tier_name, []),
             "description": tier_descriptions.get(tier_name, ""),
         }

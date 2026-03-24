@@ -22,7 +22,7 @@ from pydantic import BaseModel
 from socrates_api.auth import get_current_user
 from socrates_api.database import get_database
 from socrates_api.models import APIResponse, SuccessResponse
-from socrates_api.models_local import User
+from socrates_api.models_local import User, ProjectDatabase
 # Database import replaced with local module
 
 # Import rate limiter if available

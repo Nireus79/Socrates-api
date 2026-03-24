@@ -27,7 +27,7 @@ from socrates_api.models import (
     ErrorResponse,
 )
 from socrates_api.websocket import get_connection_manager
-from socrates_api.models_local import User
+from socrates_api.models_local import User, EventType, ProjectDatabase
 # Database import replaced with local module
 # Removed local import: from socratic_system.models import User
 

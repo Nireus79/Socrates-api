@@ -28,6 +28,7 @@ from socrates_api.models import (
     GetChatMessagesResponse,
     ListChatSessionsResponse,
 )
+from socrates_api.models_local import ProjectDatabase
 # Local debug mode
 _debug_mode = False
 
