@@ -9,7 +9,6 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # Import input validation utilities (REQUIRED)
 from socratic_security.input_validation import (
-    SanitizedStr,
     validate_no_sql_injection,
     validate_no_xss,
 )
@@ -86,9 +85,9 @@ class CreateProjectRequest(BaseModel):
         },
     )
 
-    name: SanitizedStr = Field(..., min_length=1, max_length=200, description="Project name")
-    description: Optional[SanitizedStr] = Field(None, max_length=1000, description="Project description")
-    knowledge_base_content: Optional[SanitizedStr] = Field(
+    name: str = Field(..., min_length=1, max_length=200, description="Project name")
+    description: Optional[str] = Field(None, max_length=1000, description="Project description")
+    knowledge_base_content: Optional[str] = Field(
         None, description="Initial knowledge base content"
     )
 
@@ -115,8 +114,8 @@ class UpdateProjectRequest(BaseModel):
         },
     )
 
-    name: Optional[SanitizedStr] = Field(None, min_length=1, max_length=200, description="Project name")
-    phase: Optional[SanitizedStr] = Field(None, description="Project phase")
+    name: Optional[str] = Field(None, min_length=1, max_length=200, description="Project name")
+    phase: Optional[str] = Field(None, description="Project phase")
 
     @field_validator("name", "phase")
     @classmethod
@@ -199,8 +198,8 @@ class AskQuestionRequest(BaseModel):
         },
     )
 
-    topic: Optional[SanitizedStr] = Field(None, description="Topic to ask about")
-    difficulty_level: SanitizedStr = Field(default="intermediate", description="Question difficulty level")
+    topic: Optional[str] = Field(None, description="Topic to ask about")
+    difficulty_level: str = Field(default="intermediate", description="Question difficulty level")
 
     @field_validator("topic", "difficulty_level")
     @classmethod
@@ -250,7 +249,7 @@ class ProcessResponseRequest(BaseModel):
     )
 
     question_id: str = Field(..., description="Question identifier")
-    user_response: SanitizedStr = Field(..., min_length=1, description="User's response to the question")
+    user_response: str = Field(..., min_length=1, description="User's response to the question")
 
     @field_validator("user_response")
     @classmethod
@@ -407,7 +406,7 @@ class RegisterRequest(BaseModel):
         },
     )
 
-    username: SanitizedStr = Field(
+    username: str = Field(
         ..., min_length=3, max_length=100, description="Username (3-100 characters, alphanumeric + underscore)"
     )
     email: Optional[str] = Field(None, description="User email address (optional)")
@@ -441,7 +440,7 @@ class LoginRequest(BaseModel):
         },
     )
 
-    username: SanitizedStr = Field(..., description="Username")
+    username: str = Field(..., description="Username")
     password: str = Field(..., description="Password")
 
     @field_validator("username")
@@ -720,7 +719,7 @@ class CreateChatSessionRequest(BaseModel):
         json_schema_extra={"example": {"title": "Initial Design Discussion"}},
     )
 
-    title: Optional[SanitizedStr] = Field(None, max_length=255, description="Session title")
+    title: Optional[str] = Field(None, max_length=255, description="Session title")
 
     @field_validator("title")
     @classmethod
@@ -801,9 +800,9 @@ class ChatMessageRequest(BaseModel):
         },
     )
 
-    message: SanitizedStr = Field(..., min_length=1, max_length=5000, description="Message content (max 5000 characters)")
-    role: SanitizedStr = Field(default="user", description="Message role (user or assistant)")
-    mode: SanitizedStr = Field(default="socratic", description="Chat mode (socratic or direct)")
+    message: str = Field(..., min_length=1, max_length=5000, description="Message content (max 5000 characters)")
+    role: str = Field(default="user", description="Message role (user or assistant)")
+    mode: str = Field(default="socratic", description="Chat mode (socratic or direct)")
 
     @field_validator("message", "role", "mode")
     @classmethod

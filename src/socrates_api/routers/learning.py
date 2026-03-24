@@ -374,7 +374,7 @@ def get_recommendations(
 @router.get("/analytics/{user_id}")
 def get_learning_analytics(
     user_id: str,
-    period: str = Query("weekly", regex="daily|weekly|monthly"),
+    period: str = Query("weekly", pattern="daily|weekly|monthly"),
     days_back: int = Query(30, ge=1, le=365),
 ) -> LearningAnalytics:
     """

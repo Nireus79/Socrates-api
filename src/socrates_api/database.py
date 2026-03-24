@@ -150,6 +150,82 @@ class LocalDatabase:
             logger.error(f"Failed to get user: {e}")
             return None
 
+    def load_user(self, username: str) -> Optional[Dict]:
+        """Get user by username"""
+        try:
+            cursor = self.conn.execute("SELECT * FROM users WHERE username = ?", (username,))
+            row = cursor.fetchone()
+            if row:
+                return {
+                    "id": row[0],
+                    "username": row[1],
+                    "email": row[2],
+                    "created_at": row[3],
+                    "updated_at": row[4],
+                    "metadata": json.loads(row[5] or "{}"),
+                }
+            return None
+        except Exception as e:
+            logger.error(f"Failed to load user by username: {e}")
+            return None
+
+    def load_user_by_email(self, email: str) -> Optional[Dict]:
+        """Get user by email"""
+        try:
+            cursor = self.conn.execute("SELECT * FROM users WHERE email = ?", (email,))
+            row = cursor.fetchone()
+            if row:
+                return {
+                    "id": row[0],
+                    "username": row[1],
+                    "email": row[2],
+                    "created_at": row[3],
+                    "updated_at": row[4],
+                    "metadata": json.loads(row[5] or "{}"),
+                }
+            return None
+        except Exception as e:
+            logger.error(f"Failed to load user by email: {e}")
+            return None
+
+    def save_user(self, user_data: Dict) -> Optional[Dict]:
+        """Insert or update a user record"""
+        try:
+            now = datetime.utcnow().isoformat()
+            user_id = user_data.get("id")
+            username = user_data.get("username")
+            email = user_data.get("email", "")
+            meta_json = json.dumps(user_data.get("metadata", {}))
+
+            # Check if user exists
+            existing = self.get_user(user_id) if user_id else None
+
+            if existing:
+                # Update existing user
+                self.conn.execute(
+                    "UPDATE users SET username = ?, email = ?, updated_at = ?, metadata = ? WHERE id = ?",
+                    (username, email, now, meta_json, user_id)
+                )
+            else:
+                # Create new user
+                if not user_id:
+                    import uuid
+                    user_id = str(uuid.uuid4())
+                created_at = user_data.get("created_at", now)
+                self.conn.execute(
+                    "INSERT INTO users (id, username, email, created_at, updated_at, metadata) VALUES (?, ?, ?, ?, ?, ?)",
+                    (user_id, username, email, created_at, now, meta_json)
+                )
+            self.conn.commit()
+            return self.get_user(user_id)
+        except Exception as e:
+            logger.error(f"Failed to save user: {e}")
+            return None
+
+    def load_project(self, project_id: str) -> Optional[Dict]:
+        """Get project by ID (alias for get_project for compatibility)"""
+        return self.get_project(project_id)
+
     def close(self):
         """Close database connection"""
         if self.conn:
