@@ -4,6 +4,8 @@ Socrates API - FastAPI application for Socrates AI tutoring system
 Provides REST endpoints for project management, Socratic questioning, and code generation.
 """
 
+print("[MODULE] Starting import of socrates_api.main...", flush=True)
+
 import asyncio
 import logging
 import os
@@ -16,9 +18,12 @@ from typing import Optional
 from dotenv import load_dotenv
 
 # Load environment variables from .env FIRST, before any other imports
+print("[MODULE] Loading environment variables...", flush=True)
 load_dotenv()
+print("[MODULE] Environment loaded. JWT_SECRET_KEY set: %s" % (bool(os.getenv("JWT_SECRET_KEY"))), flush=True)
 
 import uvicorn
+print("[MODULE] Uvicorn imported", flush=True)
 from fastapi import Body, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
@@ -383,6 +388,18 @@ app.add_middleware(
     max_age=3600,  # Cache preflight requests for 1 hour
 )
 
+# Add request logging middleware for debugging
+@app.middleware("http")
+async def log_requests_debug(request: Request, call_next):
+    """Log all incoming requests for debugging"""
+    path = str(request.url.path)
+    if any(x in path for x in ["/auth/register", "/projects", "/health"]):
+        print(f"[MIDDLEWARE] Incoming: {request.method} {path}", flush=True)
+    response = await call_next(request)
+    if any(x in path for x in ["/auth/register", "/projects", "/health"]):
+        print(f"[MIDDLEWARE] Response: {path} -> {response.status_code}", flush=True)
+    return response
+
 logger.info(f"CORS configured for {environment} environment with origins: {allowed_origins}")
 
 
@@ -390,11 +407,12 @@ logger.info(f"CORS configured for {environment} environment with origins: {allow
 def _include_router_safe(router, name: str):
     if router is not None:
         app.include_router(router)
-        logger.debug(f"Included router: {name}")
+        logger.info(f"[ROUTER] Included router: {name}")
     else:
-        logger.warning(f"Skipped router (not available): {name}")
+        logger.warning(f"[ROUTER] Skipped router (not available): {name}")
 
 # Include API routers
+logger.info(f"[STARTUP] Starting router inclusion, auth_router={auth_router is not None}")
 _include_router_safe(auth_router, "auth")
 _include_router_safe(commands_router, "commands")
 _include_router_safe(conflicts_router, "conflicts")
@@ -955,8 +973,8 @@ def run():
     auth_routes = [r for r in app.routes if '/auth' in r.path]
     logger.info(f"API app has {len(app.routes)} total routes, {len(auth_routes)} auth routes")
 
-    # Pass app object directly instead of string reference to ensure routes are loaded
-    uvicorn.run(app, host=host, port=port, reload=reload, log_level="info")
+    # Use string reference to ensure uvicorn loads the module fresh with all routes initialized
+    uvicorn.run("socrates_api.main:app", host=host, port=port, reload=reload, log_level="info")
 
 
 if __name__ == "__main__":
