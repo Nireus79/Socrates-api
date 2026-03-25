@@ -82,10 +82,47 @@ class LocalDatabase:
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_expires ON refresh_tokens(expires_at)")
 
             self.conn.commit()
+
+            # Perform schema migration for existing databases
+            self._migrate_schema()
+
             logger.info(f"Local database initialized: {self.db_path}")
         except Exception as e:
             logger.error(f"Failed to initialize database: {e}")
             raise
+
+    def _migrate_schema(self):
+        """Add missing columns to existing tables from previous schema versions"""
+        try:
+            # Get existing columns in users table
+            cursor = self.conn.execute("PRAGMA table_info(users)")
+            existing_columns = {row[1] for row in cursor.fetchall()}
+
+            # Define required columns with their SQL definitions
+            required_columns = {
+                'passcode_hash': 'ALTER TABLE users ADD COLUMN passcode_hash TEXT',
+                'subscription_tier': "ALTER TABLE users ADD COLUMN subscription_tier TEXT DEFAULT 'free'",
+                'subscription_status': "ALTER TABLE users ADD COLUMN subscription_status TEXT DEFAULT 'active'",
+                'testing_mode': 'ALTER TABLE users ADD COLUMN testing_mode INTEGER DEFAULT 0',
+            }
+
+            # Add any missing columns
+            for col_name, alter_sql in required_columns.items():
+                if col_name not in existing_columns:
+                    logger.info(f"Adding missing column: {col_name}")
+                    try:
+                        self.conn.execute(alter_sql)
+                        self.conn.commit()
+                    except sqlite3.OperationalError as e:
+                        # Column already exists (race condition in concurrent access)
+                        if 'duplicate column' not in str(e).lower():
+                            raise
+
+            logger.info("Schema migration completed successfully")
+        except Exception as e:
+            logger.error(f"Failed to migrate schema: {e}")
+            # Don't raise - migration failure shouldn't crash initialization
+            # The app can still work if migration partially succeeded
 
     def create_project(self, project_id: str, name: str, description: str = "", metadata: Dict = None) -> Dict:
         """Create a new project"""
