@@ -951,7 +951,12 @@ def run():
 
     logger.info(f"Starting Socrates API on {host}:{port}")
 
-    uvicorn.run("socrates_api.main:app", host=host, port=port, reload=reload, log_level="info")
+    # Verify app has routes before starting
+    auth_routes = [r for r in app.routes if '/auth' in r.path]
+    logger.info(f"API app has {len(app.routes)} total routes, {len(auth_routes)} auth routes")
+
+    # Pass app object directly instead of string reference to ensure routes are loaded
+    uvicorn.run(app, host=host, port=port, reload=reload, log_level="info")
 
 
 if __name__ == "__main__":
